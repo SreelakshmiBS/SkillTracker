@@ -1,0 +1,569 @@
+{% extends "base2.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    /* =====================================================
+       YOUR EXACT THEME - Note Library Minimal
+       primary: #2563eb, primary-light: #dbeafe
+       bg: #f8fafc, white: #ffffff
+       text: #1e293b, text-light: #64748b
+       border: #e2e8f0, radius: 16px
+    ===================================================== */
+    
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+    :root {
+        --primary: #2563eb;
+        --primary-light: #dbeafe;
+        --bg: #f8fafc;
+        --white: #ffffff;
+        --text: #1e293b;
+        --text-light: #64748b;
+        --border: #e2e8f0;
+        --shadow: 0 1px 3px rgba(0,0,0,0.05);
+        --radius: 16px;
+        
+        /* Status colors */
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --warning: #f59e0b;
+        --warning-light: #fef3c7;
+        --error: #ef4444;
+        --error-light: #fee2e2;
+        
+        /* Extended */
+        --primary-dark: #1d4ed8;
+        --primary-soft: rgba(37, 99, 235, 0.1);
+        
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    .library-container {
+        width: 1300px;
+        margin: 2rem auto;
+        padding: 0 1.5rem;
+    }
+
+    /* Header Section */
+    .library-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
+
+    .library-header h2 {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color:  #dbeafe;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .library-header h2 i {
+        color: var(--primary);
+    }
+
+    .stats-badge {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: 50px;
+        padding: 0.5rem 1.2rem;
+        font-size: 0.9rem;
+        color: var(--text-light);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .stats-badge i {
+        color: var(--primary);
+        margin-right: 0.5rem;
+    }
+
+    /* Section Titles */
+    .section-title {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .section-title h3 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .section-title .count {
+        background: var(--primary-light);
+        color: var(--primary);
+        padding: 0.2rem 0.8rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    /* Minimal Tables */
+    .table-wrapper {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        overflow: hidden;
+        margin-bottom: 2.5rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .minimal-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.95rem;
+    }
+
+    .minimal-table th {
+        text-align: left;
+        padding: 1rem 1.5rem;
+        background: var(--bg);
+        color: var(--text-light);
+        font-weight: 500;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .minimal-table td {
+        padding: 1.2rem 1.5rem;
+        border-bottom: 1px solid var(--border);
+        color: var(--text);
+    }
+
+    .minimal-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .minimal-table tbody tr:hover {
+        background: var(--primary-light);
+        transition: background 0.2s ease;
+    }
+
+    /* Status Badges */
+    .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+    }
+
+    .status-active {
+        background: var(--success-light);
+        color: var(--success);
+    }
+
+    .status-completed {
+        background: var(--warning-light);
+        color: var(--warning);
+    }
+
+    /* Note Type Badges */
+    .type-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.3rem 1rem;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        background: var(--bg);
+        color: var(--text-light);
+        border: 1px solid var(--border);
+    }
+
+    .type-badge i {
+        font-size: 0.8rem;
+    }
+
+    .type-notes i { color: var(--primary); }
+    .type-roadmap i { color: var(--warning); }
+    .type-reference i { color: var(--success); }
+
+    /* Action Buttons */
+    .action-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 8px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .action-add {
+        background: var(--primary-light);
+        color: var(--primary);
+        border: 1px solid transparent;
+    }
+
+    .action-add:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .action-download {
+        background: var(--bg);
+        color: var(--text-light);
+        border: 1px solid var(--border);
+    }
+
+    .action-download:hover {
+        background: var(--primary-light);
+        color: var(--primary);
+        border-color: var(--primary);
+    }
+
+    .action-delete {
+        background: var(--error-light);
+        color: var(--error);
+        border: 1px solid transparent;
+    }
+
+    .action-delete:hover {
+        background: var(--error);
+        color: white;
+    }
+
+    /* Date cell */
+    .date-cell {
+        color: var(--text-light);
+        font-size: 0.9rem;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: var(--white);
+        border: 1px dashed var(--border);
+        border-radius: var(--radius);
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--text-light);
+        margin-bottom: 1rem;
+        opacity: 0.5;
+    }
+
+    .empty-state p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+
+    .empty-state .action-add {
+        display: inline-flex;
+    }
+
+    /* Quick Add Card (optional) */
+    .quick-add {
+        background: var(--white);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .quick-add p {
+        color: var(--text-light);
+    }
+
+    .quick-add p i {
+        color: var(--primary);
+        margin-right: 0.5rem;
+    }
+
+    .quick-add .action-add {
+        padding: 0.6rem 1.5rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .library-container {
+            margin: 1rem auto;
+        }
+
+        .library-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .minimal-table {
+            font-size: 0.85rem;
+        }
+
+        .minimal-table th,
+        .minimal-table td {
+            padding: 0.75rem;
+        }
+
+        .action-link {
+            padding: 0.3rem 0.6rem;
+            font-size: 0.8rem;
+        }
+
+        .status-badge,
+        .type-badge {
+            padding: 0.2rem 0.6rem;
+            font-size: 0.8rem;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        
+        .minimal-table {
+            min-width: 600px;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .table-wrapper {
+        animation: fadeIn 0.4s ease;
+    }
+</style>
+<!-- Font Awesome -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<div class="library-container">
+    <!-- Header -->
+    <div class="library-header">
+        <div class="stats-badge">
+            <i class="fas fa-file-alt"></i>
+            {{ notes|length }} Notes • {{ skills|length }} Skills
+        </div>
+    </div>
+
+    <!-- Quick Add Card (optional helper) -->
+    {% if skills %}
+    <div class="quick-add">
+        <p>
+            <i class="fas fa-plus-circle"></i>
+            Add notes to your skills to build your knowledge library
+        </p>
+        {% if skills|length > 0 %}
+        <a href="{% url 'add_note' skills.0.id %}" class="action-link action-add">
+            <i class="fas fa-plus"></i> Quick Add
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- My Skills Section -->
+    <div class="section-title">
+        <h3>My Skills</h3>
+        <span class="count">{{ skills|length }}</span>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="minimal-table">
+            <thead>
+                <tr>
+                    <th>Skill</th>
+                    <th>Status</th>
+                    <th style="text-align: center;">Add Note</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for skill in skills %}
+                <tr>
+                    <td>
+                        <strong>{{ skill.title }}</strong>
+                        {% if skill.proficiency_level %}
+                        <span style="color: var(--text-light); font-size: 0.8rem; margin-left: 0.5rem;">
+                            {{ skill.proficiency_level|title }}
+                        </span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if skill.is_completed %}
+                            <span class="status-badge status-completed">
+                                <i class="fas fa-check-circle"></i>
+                                Completed
+                            </span>
+                        {% else %}
+                            <span class="status-badge status-active">
+                                <i class="fas fa-play-circle"></i>
+                                Active
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td style="text-align: center;">
+                        <a href="{% url 'add_note' skill.id %}" class="action-link action-add">
+                            <i class="fas fa-plus"></i>
+                            <span>Add Note</span>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" style="text-align: center; padding: 2rem;">
+                        <div class="empty-state">
+                            <i class="fas fa-folder-open"></i>
+                            <p>No skills added yet. Create your first skill to start adding notes.</p>
+                            <a href="{% url 'add_skill' %}" class="action-link action-add">
+                                <i class="fas fa-plus"></i> Add Skill
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Uploaded Notes Section -->
+    <div class="section-title">
+        <h3>Uploaded Notes</h3>
+        <span class="count">{{ notes|length }}</span>
+    </div>
+
+    <div class="table-wrapper">
+        <table class="minimal-table">
+            <thead>
+                <tr>
+                    <th>Skill</th>
+                    <th>Title</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th style="text-align: center;">Download</th>
+                    <th style="text-align: center;">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for note in notes %}
+                <tr>
+                    <td>
+                        <strong>{{ note.skill.title }}</strong>
+                    </td>
+                    <td>
+                        {{ note.title }}
+                        {% if note.note_type == 'roadmap' %}
+                        <i class="fas fa-map" style="color: var(--warning); margin-left: 0.5rem;"></i>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <span class="type-badge type-{{ note.note_type }}">
+                            {% if note.note_type == 'notes' %}
+                                <i class="fas fa-file-alt"></i>
+                            {% elif note.note_type == 'roadmap' %}
+                                <i class="fas fa-map"></i>
+                            {% elif note.note_type == 'reference' %}
+                                <i class="fas fa-book"></i>
+                            {% endif %}
+                            {{ note.get_note_type_display }}
+                        </span>
+                    </td>
+                    <td class="date-cell">
+                        <i class="far fa-calendar" style="margin-right: 0.3rem;"></i>
+                        {{ note.uploaded_at|date:"d M Y" }}
+                    </td>
+                    <td style="text-align: center;">
+                        <a href="{{ note.file.url }}" download class="action-link action-download">
+                            <i class="fas fa-download"></i>
+                            <span>Download</span>
+                        </a>
+                    </td>
+                    <td style="text-align: center;">
+                        <a href="{% url 'delete_note' note.id %}" 
+                           class="action-link action-delete"
+                           onclick="return confirm('Are you sure you want to delete "{{ note.title }}"?')">
+                            <i class="fas fa-trash"></i>
+                            <span>Delete</span>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem;">
+                        <div class="empty-state">
+                            <i class="fas fa-file-alt"></i>
+                            <p>No notes uploaded yet. Add notes to your skills to build your library.</p>
+                            {% if skills %}
+                            <a href="{% url 'add_note' skills.0.id %}" class="action-link action-add">
+                                <i class="fas fa-plus"></i> Add Your First Note
+                            </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add smooth hover effects
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            row.addEventListener('mouseenter', function() {
+                this.style.transition = 'background 0.2s ease';
+            });
+        });
+
+        // Confirm delete for delete links
+        const deleteLinks = document.querySelectorAll('.action-delete');
+        deleteLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                if (!confirm('Are you sure you want to delete this note? This action cannot be undone.')) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

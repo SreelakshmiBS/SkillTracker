@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        :root {
+            --blue-primary: #0066FF;
+            --blue-deep: #003D99;
+            --blue-medium: #3385FF;
+            --blue-light: #6BA3FF;
+            --blue-sky: #A3C9FF;
+            --blue-pale: #E6F0FF;
+            --blue-dark: #001F4D;
+            --neutral-white: #FFFFFF;
+            --neutral-light: #F8FAFB;
+            --neutral-gray: #64748B;
+            --shadow-soft: rgba(0, 61, 153, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Dropdown Container */
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown Menu */
+        .dropdown-menu {
+            position: absolute;
+            top: 140%;
+            right: 0;
+            min-width: 190px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 14px;
+            box-shadow: 0 20px 40px rgba(0, 64, 255, 0.15);
+            padding: 8px;
+            opacity: 0;
+            transform: translateY(-10px);
+            pointer-events: none;
+            transition: all 0.25s ease;
+            z-index: 1000;
+        }
+
+        /* Show Dropdown on Hover */
+        .nav-dropdown:hover .dropdown-menu {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        /* Dropdown Links */
+        .dropdown-menu a {
+            display: block;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            color: #0f172a;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        /* Dropdown Link Hover Effect */
+        .dropdown-menu a:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+            transform: translateX(3px);
+        }
+
+        /* Navigation with Blue Background */
+        nav {
+            position: relative;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 5%;
+            animation: slideDown 0.8s ease-out;
+            background: linear-gradient(135deg, var(--blue-primary), var(--blue-deep));
+            box-shadow: 0 4px 20px rgba(0, 61, 153, 0.15);
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Logo */
+        .logo {
+            font-family: 'Fraunces', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, white, var(--blue-pale));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, white, var(--blue-light));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            transform: rotate(-5deg);
+            animation: iconPulse 3s infinite ease-in-out;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% {
+                transform: rotate(-5deg) scale(1);
+            }
+            50% {
+                transform: rotate(-5deg) scale(1.1);
+            }
+        }
+
+        /* Navigation Links */
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: white;
+            font-weight: 500;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: white;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* CTA Button */
+        .nav-cta {
+            padding: 0.75rem 1.75rem;
+            background: white;
+            color: var(--blue-primary);
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .nav-cta:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.3);
+            background: var(--blue-pale);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 968px) {
+            nav {
+                padding: 1rem 3%;
+            }
+
+            .logo {
+                font-size: 1.5rem;
+            }
+
+            .logo-icon {
+                width: 32px;
+                height: 32px;
+                font-size: 1.1rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .nav-cta {
+                padding: 0.6rem 1.5rem;
+                font-size: 0.95rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            nav {
+                padding: 1rem 4%;
+            }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .logo-icon {
+                width: 28px;
+                height: 28px;
+                font-size: 1rem;
+            }
+
+            .nav-cta {
+                padding: 0.5rem 1.25rem;
+                font-size: 0.9rem;
+            }
+
+            .dropdown-menu {
+                min-width: 160px;
+                right: -10px;
+            }
+
+            .dropdown-menu a {
+                padding: 10px 12px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation with Blue Background -->
+    <nav>
+        <a href="{% url 'index' %}" class="logo">
+            <div class="logo-icon">🌱</div>
+            SkillTrack
+        </a>
+        
+        {% comment %} <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#community">Community</a></li>
+            <li><a href="#pricing">Pricing</a></li>
+        </ul> {% endcomment %}
+        
+        <div class="nav-dropdown">
+            <a href="#" class="nav-cta">Get Started ▾</a>
+
+            <div class="dropdown-menu">
+        <a href="{% url 'register' %}">Register</a>
+        <a href="{% url 'login_view' %}">Login</a>
+    </div>
+        </div>
+    </nav>
+</body>
+</html>

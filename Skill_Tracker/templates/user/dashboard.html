@@ -1,0 +1,1713 @@
+{% extends "base2.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+<!-- Plotly CSS -->
+<link rel="stylesheet" href="https://cdn.plot.ly/plotly-2.27.1.min.css">
+
+<style>
+    /* =====================================================
+       1. THEME VARIABLES & RESET
+    ===================================================== */
+    :root {
+        /* Colors */
+        --primary: #2563eb;
+        --primary-dark: #1d4ed8;
+        --primary-light: #60a5fa;
+        --primary-extra-light: #93c5fd;
+        --primary-bg-light: #dbeafe;
+        
+        /* Backgrounds */
+        --bg: #f8fafc;
+        --white: #ffffff;
+        
+        /* Text */
+        --text: #1e293b;
+        --text-light: #64748b;
+        --text-muted: #94a3b8;
+        
+        /* Status */
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --success-dark: #059669;
+        --warning: #f59e0b;
+        --warning-light: #fed7aa;
+        --danger: #ef4444;
+        --danger-light: #fee2e2;
+        --info: #3b82f6;
+        
+        /* Borders & Shadows */
+        --border: #e2e8f0;
+        --border-light: #f1f5f9;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-primary: 0 10px 15px -3px rgba(37, 99, 235, 0.2), 0 4px 6px -4px rgba(37, 99, 235, 0.1);
+        
+        /* Border Radius */
+        --radius-sm: 0.375rem;
+        --radius: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --radius-2xl: 1.5rem;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    /* =====================================================
+       2. LAYOUT & CONTAINERS - 80% width with 10% padding
+    ===================================================== */
+    .dashboard-container {
+        width: 80%;
+        margin: 2rem auto;
+        padding: 0;
+    }
+
+    /* Grid Systems */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.8rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .grid-2 {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.8rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .grid-3 {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.8rem;
+        margin-bottom: 2.5rem;
+    }
+
+    /* =====================================================
+       3. HEADER SECTION - Enhanced
+    ===================================================== */
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2.5rem;
+        padding: 1.5rem 2rem;
+        background: var(--white);
+        border-radius: var(--radius-2xl);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+    }
+
+    .dashboard-header:hover {
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+    }
+
+    .header-left {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .dashboard-title {
+        font-size: 2rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, var(--text), var(--primary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        position: relative;
+    }
+
+    .dashboard-title::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 60px;
+        height: 3px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        border-radius: 3px;
+    }
+
+    .header-badge {
+        background: var(--primary-bg-light);
+        color: var(--primary);
+        padding: 0.5rem 1.5rem;
+        border-radius: 2rem;
+        font-size: 0.9rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid transparent;
+        transition: all 0.3s ease;
+    }
+
+    .header-badge:hover {
+        background: var(--primary);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-primary);
+    }
+
+    .header-badge i {
+        font-size: 0.9rem;
+    }
+
+    .date-badge {
+        background: var(--white);
+        padding: 0.75rem 2rem;
+        border-radius: 2rem;
+        border: 1px solid var(--border);
+        color: var(--text-light);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+    }
+
+    .date-badge:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .date-badge i {
+        color: var(--primary);
+        font-size: 1rem;
+    }
+
+    /* =====================================================
+       4. STAT CARDS - Enhanced
+    ===================================================== */
+    .stat-card {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+        border: 1px solid var(--border);
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+    }
+
+    .stat-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+    }
+
+    .stat-card:hover::before {
+        transform: scaleX(1);
+    }
+
+    .stat-card:active {
+        transform: translateY(-2px);
+    }
+
+    .stat-icon {
+        width: 52px;
+        height: 52px;
+        background: var(--primary-bg-light);
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+        color: var(--primary);
+        transition: all 0.3s ease;
+        font-size: 1.5rem;
+    }
+
+    .stat-card:hover .stat-icon {
+        background: var(--primary);
+        color: var(--white);
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .stat-label {
+        color: var(--text-light);
+        font-size: 0.875rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.5rem;
+    }
+
+    .stat-value {
+        color: var(--text);
+        font-size: 2.2rem;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 0.5rem;
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover .stat-value {
+        color: var(--primary);
+    }
+
+    .stat-trend {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: var(--text-light);
+        padding-top: 0.5rem;
+        border-top: 1px solid var(--border-light);
+    }
+
+    .trend-up {
+        color: var(--success);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .trend-up i {
+        animation: bounce 2s infinite;
+    }
+
+    @keyframes bounce {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-3px); }
+    }
+
+    /* =====================================================
+       5. FILTER SECTION - Enhanced
+    ===================================================== */
+    .filter-section {
+        background: var(--white);
+        border-radius: var(--radius-2xl);
+        padding: 1.5rem 2rem;
+        margin-bottom: 2.5rem;
+        border: 1px solid var(--border);
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: var(--shadow);
+    }
+
+    .filter-group {
+        display: flex;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+
+    .filter-btn {
+        padding: 0.7rem 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 2rem;
+        background: var(--white);
+        color: var(--text-light);
+        font-size: 0.9rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .filter-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(37, 99, 235, 0.1);
+        transform: translate(-50%, -50%);
+        transition: width 0.5s, height 0.5s;
+    }
+
+    .filter-btn:hover::before {
+        width: 200px;
+        height: 200px;
+    }
+
+    .filter-btn i {
+        font-size: 0.9rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .filter-btn:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .filter-btn.active {
+        background: var(--primary);
+        color: var(--white);
+        border-color: var(--primary);
+        box-shadow: var(--shadow-primary);
+    }
+
+    .time-range-select {
+        padding: 0.7rem 2.5rem 0.7rem 1.5rem;
+        border: 1px solid var(--border);
+        border-radius: 2rem;
+        color: var(--text);
+        font-size: 0.9rem;
+        cursor: pointer;
+        outline: none;
+        background: var(--white);
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 16px;
+        transition: all 0.3s ease;
+    }
+
+    .time-range-select:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+    }
+
+    /* =====================================================
+       6. SECTION STYLES - Enhanced
+    ===================================================== */
+    .section {
+        background: var(--white);
+        border-radius: var(--radius-2xl);
+        padding: 2rem;
+        margin-bottom: 2.5rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        transition: all 0.3s ease;
+    }
+
+    .section:hover {
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary-light);
+    }
+
+    .section-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--border-light);
+    }
+
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .section-title i {
+        color: var(--primary);
+        font-size: 1.3rem;
+        background: var(--primary-bg-light);
+        padding: 0.5rem;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .section:hover .section-title i {
+        transform: rotate(5deg) scale(1.1);
+        background: var(--primary);
+        color: white;
+    }
+
+    /* =====================================================
+       7. SKILL CARDS - WITH LEFT RIBBON COMPLETED BADGE
+    ===================================================== */
+    .skill-card {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--border);
+        overflow: hidden;
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        cursor: pointer;
+    }
+
+    .skill-card:hover {
+        box-shadow: var(--shadow-lg);
+        border-color: var(--primary);
+        transform: translateY(-4px);
+    }
+
+    /* LEFT RIBBON COMPLETED BADGE */
+    .completed-ribbon {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 150px;
+        height: 150px;
+        overflow: hidden;
+        z-index: 20;
+        pointer-events: none;
+    }
+
+    .completed-ribbon::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-width: 40px 40px 0 0;
+        border-style: solid;
+        border-color: var(--success) transparent transparent transparent;
+        transform: rotate(90deg);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .completed-ribbon span {
+        position: absolute;
+        top: 25px;
+        left: -25px;
+        transform: rotate(-45deg);
+        background: var(--success);
+        color: white;
+        font-size: 0.75rem;
+        font-weight: 700;
+        padding: 0.35rem 2rem;
+        text-align: center;
+        box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+        letter-spacing: 0.5px;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+        text-transform: uppercase;
+        width: 150px;
+        justify-content: center;
+    }
+
+    .completed-ribbon span i {
+        font-size: 0.7rem;
+    }
+
+    /* Alternative corner badge for small screens */
+    .completed-corner-badge {
+        display: none;
+    }
+
+    /* Completed skill card styling */
+    .skill-card.completed {
+        background: linear-gradient(135deg, #f0fdf4, #ffffff);
+        border-color: var(--success-light);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .skill-card.completed::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--success), var(--success-light), var(--success));
+        background-size: 200% 100%;
+        animation: gradientMove 3s ease infinite;
+    }
+
+    .skill-card.completed .skill-title {
+        color: var(--success-dark);
+    }
+
+    .skill-card.completed .skill-title i {
+        color: var(--success);
+    }
+
+    .skill-card.completed .progress-bar-fill {
+        background: linear-gradient(90deg, var(--success), var(--success-light));
+    }
+
+    .skill-card.completed .progress-value {
+        color: var(--success-dark);
+    }
+
+    .skill-card.completed .skill-badge {
+        background: rgba(16, 185, 129, 0.15);
+        color: var(--success-dark);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    @keyframes gradientMove {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    .skill-header {
+        background: linear-gradient(135deg, var(--bg), var(--white));
+        padding: 1.25rem 1.5rem 1.25rem 2rem;
+        border-bottom: 1px solid var(--border);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .skill-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .skill-title i {
+        color: var(--primary);
+        font-size: 1.1rem;
+        transition: transform 0.3s ease;
+    }
+
+    .skill-card:hover .skill-title i {
+        transform: rotate(360deg);
+    }
+
+    .skill-badge {
+        padding: 0.35rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        white-space: nowrap;
+        transition: all 0.3s ease;
+    }
+
+    .skill-card:hover .skill-badge {
+        transform: scale(1.05);
+    }
+
+    .badge-beginner {
+        background: var(--border-light);
+        color: var(--text-light);
+    }
+
+    .badge-intermediate {
+        background: var(--primary-bg-light);
+        color: var(--primary);
+    }
+
+    .badge-advanced {
+        background: var(--primary);
+        color: var(--white);
+    }
+
+    .skill-content {
+        padding: 1.5rem;
+        flex: 1;
+    }
+
+    /* Mini Stats */
+    .mini-stats {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.75rem;
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        background: var(--bg);
+        border-radius: var(--radius-lg);
+        transition: all 0.3s ease;
+    }
+
+    .skill-card:hover .mini-stats {
+        background: var(--white);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .mini-stat {
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .skill-card:hover .mini-stat {
+        transform: translateY(-2px);
+    }
+
+    .mini-stat-value {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .skill-card:hover .mini-stat-value {
+        color: var(--primary);
+    }
+
+    .mini-stat-label {
+        font-size: 0.7rem;
+        color: var(--text-light);
+        margin-top: 0.15rem;
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        margin-bottom: 1.5rem;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .progress-value {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+        transition: all 0.3s ease;
+    }
+
+    .skill-card:hover .progress-value {
+        transform: scale(1.1);
+    }
+
+    .progress-bar-bg {
+        width: 100%;
+        height: 8px;
+        background: var(--border-light);
+        border-radius: 4px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        border-radius: 4px;
+        transition: width 1s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+        animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+        0% { transform: translateX(-100%); }
+        100% { transform: translateX(100%); }
+    }
+
+    /* Chart Containers */
+    .chart-container {
+        background: var(--bg);
+        border-radius: var(--radius-lg);
+        padding: 1rem;
+        margin-bottom: 1rem;
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+    }
+
+    .chart-container:hover {
+        background: var(--white);
+        box-shadow: var(--shadow);
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.75rem;
+    }
+
+    .chart-title {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: var(--text-light);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        display: flex;
+        align-items: center;
+        gap: 0.35rem;
+    }
+
+    .chart-title i {
+        color: var(--primary);
+        font-size: 0.75rem;
+    }
+
+    /* Action Buttons */
+    .skill-actions {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: 1.5rem;
+        justify-content: flex-end;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-light);
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 0.5rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        text-decoration: none;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s;
+    }
+
+    .btn:hover::before {
+        width: 150px;
+        height: 150px;
+    }
+
+    .btn-primary {
+        background: var(--primary);
+        color: var(--white);
+        box-shadow: var(--shadow-primary);
+    }
+
+    .btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 15px -5px var(--primary);
+    }
+
+    .btn-outline {
+        background: var(--white);
+        border: 1px solid var(--border);
+        color: var(--text);
+    }
+
+    .btn-outline:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-bg-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--white);
+        border: 1px solid var(--border);
+        color: var(--text-light);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .btn-icon:hover {
+        border-color: var(--primary);
+        color: var(--primary);
+        background: var(--primary-bg-light);
+        transform: translateY(-2px) rotate(360deg);
+        box-shadow: var(--shadow);
+    }
+
+    /* =====================================================
+       8. TABLES - Enhanced
+    ===================================================== */
+    .table-responsive {
+        overflow-x: auto;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        transition: all 0.3s ease;
+    }
+
+    .table-responsive:hover {
+        border-color: var(--primary-light);
+        box-shadow: var(--shadow);
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        background: var(--white);
+    }
+
+    th {
+        background: var(--bg);
+        padding: 1rem 1.5rem;
+        text-align: left;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-light);
+        border-bottom: 2px solid var(--border);
+    }
+
+    td {
+        padding: 1rem 1.5rem;
+        border-bottom: 1px solid var(--border-light);
+        color: var(--text);
+        font-size: 0.875rem;
+        transition: all 0.3s ease;
+    }
+
+    tr {
+        transition: all 0.3s ease;
+        cursor: pointer;
+    }
+
+    tr:hover td {
+        background: var(--primary-bg-light);
+        color: var(--primary-dark);
+    }
+
+    .skill-tag {
+        padding: 0.35rem 1rem;
+        border-radius: 2rem;
+        font-size: 0.7rem;
+        font-weight: 500;
+        background: var(--primary-bg-light);
+        color: var(--primary);
+        display: inline-block;
+        transition: all 0.3s ease;
+    }
+
+    tr:hover .skill-tag {
+        background: var(--primary);
+        color: white;
+        transform: scale(1.05);
+    }
+
+    /* =====================================================
+       9. EMPTY STATE
+    ===================================================== */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: var(--white);
+        border-radius: var(--radius-2xl);
+        border: 2px dashed var(--border);
+        grid-column: 1 / -1;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover {
+        border-color: var(--primary);
+        background: var(--primary-bg-light);
+        transform: translateY(-4px);
+    }
+
+    .empty-state i {
+        font-size: 4rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .empty-state:hover i {
+        color: var(--primary);
+        transform: scale(1.1);
+    }
+
+    /* =====================================================
+       10. TOOLTIP
+    ===================================================== */
+    .tooltip {
+        position: relative;
+        display: inline-block;
+    }
+
+    .tooltip .tooltip-text {
+        visibility: hidden;
+        width: 120px;
+        background: var(--text);
+        color: var(--white);
+        text-align: center;
+        border-radius: var(--radius);
+        padding: 0.5rem;
+        position: absolute;
+        z-index: 1000;
+        bottom: 125%;
+        left: 50%;
+        transform: translateX(-50%);
+        opacity: 0;
+        transition: all 0.3s ease;
+        font-size: 0.7rem;
+        pointer-events: none;
+        white-space: nowrap;
+        box-shadow: var(--shadow);
+    }
+
+    .tooltip .tooltip-text::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 5px;
+        border-style: solid;
+        border-color: var(--text) transparent transparent transparent;
+    }
+
+    .tooltip:hover .tooltip-text {
+        visibility: visible;
+        opacity: 1;
+        bottom: 135%;
+    }
+
+    /* =====================================================
+       11. RESPONSIVE DESIGN
+    ===================================================== */
+    @media (max-width: 1400px) {
+        .dashboard-container {
+            width: 90%;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .skills-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .dashboard-container {
+            width: 95%;
+        }
+        
+        .skills-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .grid-2, .grid-3 {
+            grid-template-columns: 1fr;
+            gap: 1.5rem;
+        }
+        
+        .completed-ribbon {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .completed-ribbon span {
+            top: 20px;
+            left: -20px;
+            font-size: 0.7rem;
+            padding: 0.3rem 1.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1.25rem;
+        }
+        
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .filter-section {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 1.25rem;
+        }
+        
+        .filter-group {
+            justify-content: center;
+        }
+        
+        .filter-btn {
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .mini-stats {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .skill-actions {
+            flex-wrap: wrap;
+        }
+        
+        .skill-actions .btn {
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .skills-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        /* Switch to corner badge on mobile */
+        .completed-ribbon {
+            display: none;
+        }
+        
+        .completed-corner-badge {
+            display: flex;
+            position: absolute;
+            top: 0.75rem;
+            left: 0.75rem;
+            background: var(--success);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 2rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            align-items: center;
+            gap: 0.25rem;
+            z-index: 20;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+        }
+        
+        .skill-card.completed .completed-corner-badge {
+            display: flex;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .section-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+        
+        .header-left {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Plotly CDN -->
+<script src="https://cdn.plot.ly/plotly-2.27.1.min.js" charset="utf-8"></script>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    
+    <!-- ===================== HEADER ===================== -->
+    <div class="dashboard-header">
+        <div class="header-left">
+            <h1 class="dashboard-title">
+                Skill Development Dashboard
+            </h1>
+            <div class="header-badge">
+                <i class="fas fa-chart-line"></i>
+                <span>Analytics</span>
+            </div>
+        </div>
+        <div class="date-badge">
+            <i class="far fa-calendar-alt"></i>
+            {% now "l, F j, Y" %}
+        </div>
+    </div>
+
+    <!-- ===================== STATS CARDS ===================== -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-code"></i>
+            </div>
+            <div class="stat-label">Total Skills</div>
+            <div class="stat-value">{{ total_skills }}</div>
+            <div class="stat-trend">
+                <i class="fas fa-arrow-up trend-up"></i>
+                <span class="trend-up">{{ active_skills }} active</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-clock"></i>
+            </div>
+            <div class="stat-label">Study Time</div>
+            <div class="stat-value">{{ total_study_time }}h</div>
+            <div class="stat-trend">
+                <i class="far fa-calendar-check"></i>
+                <span>{{ avg_daily_time|floatformat:1 }}h/day</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-bullseye"></i>
+            </div>
+            <div class="stat-label">Goals</div>
+            <div class="stat-value">{{ goal_completion }}%</div>
+            <div class="stat-trend">
+                <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                <span>{{ goal_completed }}/{{ goal_total }} completed</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-fire"></i>
+            </div>
+            <div class="stat-label">Current Streak</div>
+            <div class="stat-value">{{ streak }} days</div>
+            <div class="stat-trend">
+                <i class="fas fa-rocket" style="color: var(--warning);"></i>
+                <span class="trend-up">Keep going!</span>
+            </div>
+        </div>
+
+        <div class="stat-card">
+            <div class="stat-icon">
+                <i class="fas fa-chart-pie"></i>
+            </div>
+            <div class="stat-label">Productivity</div>
+            <div class="stat-value">{{ productivity_score }}</div>
+            <div class="stat-trend">
+                <i class="fas fa-star" style="color: var(--warning);"></i>
+                <span>Overall score</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===================== FILTER SECTION ===================== -->
+    <div class="filter-section">
+        <div class="filter-group">
+            <button class="filter-btn active" onclick="filterSkills('all')">
+                <i class="fas fa-th-large"></i> All Skills
+            </button>
+            <button class="filter-btn" onclick="filterSkills('active')">
+                <i class="fas fa-play-circle"></i> Active
+            </button>
+            <button class="filter-btn" onclick="filterSkills('completed')">
+                <i class="fas fa-check-circle"></i> Completed
+            </button>
+            <button class="filter-btn" onclick="filterSkills('goals')">
+                <i class="fas fa-bullseye"></i> With Goals
+            </button>
+        </div>
+        <select class="time-range-select" onchange="changeTimeRange(this.value)">
+            <option value="7">Last 7 Days</option>
+            <option value="30" selected>Last 30 Days</option>
+            <option value="90">Last 90 Days</option>
+            <option value="365">Last Year</option>
+        </select>
+    </div>
+
+    <!-- ===================== SKILLS GRID - 4 CARDS PER ROW ===================== -->
+    <div class="skills-grid" id="skillsGrid">
+        {% for chart in skill_charts %}
+        {% with is_completed=chart.skill.is_completed|default:False %}
+        <div class="skill-card {% if is_completed %}completed{% endif %}" 
+             data-status="{% if is_completed %}completed{% elif chart.skill.is_active %}active{% else %}inactive{% endif %}"
+             data-has-goals="{% if chart.pie_div|length > 100 %}true{% else %}false{% endif %}">
+            
+            <!-- LEFT RIBBON COMPLETED BADGE -->
+            {% if is_completed %}
+            <div class="completed-ribbon">
+                <span>
+                    <i class="fas fa-check-circle"></i> MASTERED
+                </span>
+            </div>
+            <!-- Corner badge for mobile -->
+            <div class="completed-corner-badge">
+                <i class="fas fa-check-circle"></i> Mastered
+            </div>
+            {% endif %}
+            
+            <div class="skill-header">
+                <h3 class="skill-title">
+                    <i class="fas fa-code"></i>
+                    {{ chart.skill.title }}
+                    {% if is_completed %}
+                    <i class="fas fa-crown" style="color: #fbbf24; font-size: 0.9rem; margin-left: 0.25rem;"></i>
+                    {% endif %}
+                </h3>
+                <span class="skill-badge 
+                    {% if chart.skill.proficiency_level == 'beginner' %}badge-beginner
+                    {% elif chart.skill.proficiency_level == 'intermediate' %}badge-intermediate
+                    {% else %}badge-advanced{% endif %}">
+                    {{ chart.skill.get_proficiency_level_display }}
+                </span>
+            </div>
+            
+            <div class="skill-content">
+                <!-- Mini Stats -->
+                <div class="mini-stats">
+                    <div class="mini-stat">
+                        <div class="mini-stat-value">{{ chart.total_hours }}h</div>
+                        <div class="mini-stat-label">Total</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-value">{{ chart.avg_daily|floatformat:1 }}h</div>
+                        <div class="mini-stat-label">Daily</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-value">{{ chart.total_days }}</div>
+                        <div class="mini-stat-label">Days</div>
+                    </div>
+                    <div class="mini-stat">
+                        <div class="mini-stat-value">{{ chart.percent }}%</div>
+                        <div class="mini-stat-label">Progress</div>
+                    </div>
+                </div>
+
+                <!-- Progress Bar -->
+                <div class="progress-container tooltip">
+                    <div class="progress-header">
+                        <span class="progress-label">
+                            <i class="fas fa-chart-line"></i>
+                            Progress
+                        </span>
+                        <span class="progress-value">{{ chart.percent }}%</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" style="width: {{ chart.percent }}%"></div>
+                    </div>
+                    <span class="tooltip-text">{{ chart.percent }}% of goal achieved</span>
+                </div>
+
+                <!-- Charts Grid -->
+                <div class="grid-2" style="margin-bottom: 0;">
+                    <!-- Gauge Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <span class="chart-title">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Gauge
+                            </span>
+                        </div>
+                        {{ chart.gauge_div|safe }}
+                    </div>
+
+                    <!-- Pie Chart -->
+                    <div class="chart-container">
+                        <div class="chart-header">
+                            <span class="chart-title">
+                                <i class="fas fa-chart-pie"></i>
+                                Goals
+                            </span>
+                            <button class="btn-icon tooltip" onclick="downloadChart('{{ chart.skill.title }} Goals', '{{ chart.pie_div|escapejs }}')">
+                                <i class="fas fa-download"></i>
+                                <span class="tooltip-text">Download</span>
+                            </button>
+                        </div>
+                        {{ chart.pie_div|safe }}
+                    </div>
+                </div>
+
+                <!-- Bar Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <span class="chart-title">
+                            <i class="fas fa-chart-bar"></i>
+                            Monthly
+                        </span>
+                        <button class="btn-icon tooltip" onclick="downloadChart('{{ chart.skill.title }} Monthly', '{{ chart.bar_div|escapejs }}')">
+                            <i class="fas fa-download"></i>
+                            <span class="tooltip-text">Download</span>
+                        </button>
+                    </div>
+                    {{ chart.bar_div|safe }}
+                </div>
+
+                <!-- Line Chart -->
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <span class="chart-title">
+                            <i class="fas fa-chart-line"></i>
+                            Daily
+                        </span>
+                        <button class="btn-icon tooltip" onclick="downloadChart('{{ chart.skill.title }} Daily', '{{ chart.line_div|escapejs }}')">
+                            <i class="fas fa-download"></i>
+                            <span class="tooltip-text">Download</span>
+                        </button>
+                    </div>
+                    {{ chart.line_div|safe }}
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="skill-actions">
+                    <a href="{% url 'add_skill_progress' chart.skill.id %}" class="btn btn-primary btn-sm tooltip">
+                        <i class="fas fa-plus-circle"></i>
+                        Progress
+                        <span class="tooltip-text">Add progress</span>
+                    </a>
+                    <a href="{% url 'add_note' chart.skill.id %}" class="btn btn-outline btn-sm tooltip">
+                        <i class="fas fa-sticky-note"></i>
+                        Note
+                        <span class="tooltip-text">Add note</span>
+                    </a>
+                    <a href="{% url 'view_skill' chart.skill.id %}" class="btn btn-outline btn-sm tooltip">
+                        <i class="fas fa-eye"></i>
+                        View
+                        <span class="tooltip-text">View details</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        {% endwith %}
+        {% empty %}
+        <div class="empty-state">
+            <i class="fas fa-rocket"></i>
+            <h3>No Skills Found</h3>
+            <p>Get started by adding your first skill</p>
+            <a href="{% url 'add_skill' %}" class="btn btn-primary">
+                <i class="fas fa-plus-circle"></i>
+                Add Skill
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- ===================== OVERALL PROGRESS SECTION ===================== -->
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-chart-simple"></i>
+                Overall Progress
+            </h2>
+            <div class="section-actions">
+                <button class="btn-icon tooltip" onclick="downloadChart('Overall Progress', '{{ overall_div|escapejs }}')">
+                    <i class="fas fa-download"></i>
+                    <span class="tooltip-text">Download</span>
+                </button>
+            </div>
+        </div>
+        {{ overall_div|safe }}
+    </div>
+
+    <!-- ===================== ANALYTICS GRID ===================== -->
+    <div class="grid-2">
+        <!-- Weekly Trend -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-calendar-week"></i>
+                    Weekly Progress
+                </h2>
+                <button class="btn-icon tooltip" onclick="downloadChart('Weekly Progress', '{{ weekly_div|escapejs }}')">
+                    <i class="fas fa-download"></i>
+                    <span class="tooltip-text">Download</span>
+                </button>
+            </div>
+            {{ weekly_div|safe }}
+        </div>
+
+        <!-- Activity Heatmap -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-border-all"></i>
+                    Activity Pattern
+                </h2>
+                <button class="btn-icon tooltip" onclick="downloadChart('Heatmap', '{{ heatmap_div|escapejs }}')">
+                    <i class="fas fa-download"></i>
+                    <span class="tooltip-text">Download</span>
+                </button>
+            </div>
+            {{ heatmap_div|safe }}
+        </div>
+    </div>
+
+    <!-- ===================== RECENT NOTES ===================== -->
+    <div class="section">
+        <div class="section-header">
+            <h2 class="section-title">
+                <i class="fas fa-book-open"></i>
+                Recent Notes
+            </h2>
+            <a href="{% url 'note_library' %}" class="btn btn-outline btn-sm">
+                <i class="fas fa-eye"></i>
+                View All
+            </a>
+        </div>
+        
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Skill</th>
+                        <th>Title</th>
+                        <th>Uploaded</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for note in notes %}
+                    <tr>
+                        <td>
+                            <span class="skill-tag">{{ note.skill.title }}</span>
+                        </td>
+                        <td>
+                            <i class="fas fa-file-alt"></i>
+                            {{ note.title|truncatechars:25 }}
+                        </td>
+                        <td>
+                            <i class="far fa-clock"></i>
+                            {{ note.uploaded_at|date:"M d" }}
+                        </td>
+                        <td>
+                            <a href="{{ note.file.url }}" download class="btn-icon tooltip">
+                                <i class="fas fa-download"></i>
+                                <span class="tooltip-text">Download</span>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="4" class="empty-state">No notes yet</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- ===================== JAVASCRIPT ===================== -->
+<script>
+// Download chart function
+function downloadChart(title, chartDiv) {
+    try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(chartDiv, 'text/html');
+        const svg = doc.querySelector('svg');
+
+        if (!svg) {
+            alert('Chart not found');
+            return;
+        }
+
+        const width = svg.getAttribute('width') || '800';
+        const height = svg.getAttribute('height') || '400';
+        
+        svg.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+        svg.setAttribute('width', width);
+        svg.setAttribute('height', height);
+        svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+
+        const svgString = '<?xml version="1.0" encoding="UTF-8"?>\n' +
+                         '<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">\n' +
+                         new XMLSerializer().serializeToString(svg);
+
+        const blob = new Blob([svgString], {type: 'image/svg+xml;charset=utf-8'});
+        const url = URL.createObjectURL(blob);
+        
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = title.toLowerCase().replace(/\s+/g, '-') + '.svg';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        setTimeout(() => {
+            URL.revokeObjectURL(url);
+        }, 100);
+    } catch (error) {
+        console.error('Download failed:', error);
+        alert('Failed to download chart. Please try again.');
+    }
+}
+
+// Filter skills
+function filterSkills(filter) {
+    const cards = document.querySelectorAll('.skill-card');
+    const buttons = document.querySelectorAll('.filter-btn');
+    
+    buttons.forEach(btn => {
+        btn.classList.remove('active');
+        if (btn.textContent.toLowerCase().includes(filter) || 
+            (filter === 'all' && btn.textContent.includes('All'))) {
+            btn.classList.add('active');
+        }
+    });
+    
+    cards.forEach(card => {
+        switch(filter) {
+            case 'all':
+                card.style.display = 'block';
+                break;
+            case 'active':
+                card.style.display = card.dataset.status === 'active' ? 'block' : 'none';
+                break;
+            case 'completed':
+                card.style.display = card.dataset.status === 'completed' ? 'block' : 'none';
+                break;
+            case 'goals':
+                card.style.display = card.dataset.hasGoals === 'true' ? 'block' : 'none';
+                break;
+        }
+    });
+}
+
+// Change time range
+function changeTimeRange(days) {
+    const container = document.querySelector('.dashboard-container');
+    if (container) {
+        container.style.opacity = '0.5';
+        container.style.pointerEvents = 'none';
+    }
+    
+    const url = new URL(window.location.href);
+    url.searchParams.set('days', days);
+    
+    setTimeout(() => {
+        window.location.href = url.toString();
+    }, 300);
+}
+
+// Auto-resize charts
+let resizeTimer;
+window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => {
+        if (typeof Plotly !== 'undefined') {
+            const plots = document.querySelectorAll('.js-plotly-plot');
+            if (plots.length > 0) {
+                Plotly.Plots.resize(plots);
+            }
+        }
+    }, 250);
+});
+
+// Initialize dashboard
+document.addEventListener('DOMContentLoaded', () => {
+    if (typeof Plotly === 'undefined') {
+        const script = document.createElement('script');
+        script.src = 'https://cdn.plot.ly/plotly-2.27.1.min.js';
+        script.onload = () => {
+            setTimeout(() => {
+                const plots = document.querySelectorAll('.js-plotly-plot');
+                if (plots.length > 0 && typeof Plotly !== 'undefined') {
+                    Plotly.Plots.resize(plots);
+                }
+            }, 500);
+        };
+        document.head.appendChild(script);
+    } else {
+        setTimeout(() => {
+            const plots = document.querySelectorAll('.js-plotly-plot');
+            if (plots.length > 0) {
+                Plotly.Plots.resize(plots);
+            }
+        }, 500);
+    }
+    
+    // Initialize tooltips
+    const tooltips = document.querySelectorAll('.tooltip');
+    tooltips.forEach(tooltip => {
+        tooltip.addEventListener('mouseenter', () => {
+            const text = tooltip.querySelector('.tooltip-text');
+            if (text) {
+                text.style.visibility = 'visible';
+                text.style.opacity = '1';
+            }
+        });
+        tooltip.addEventListener('mouseleave', () => {
+            const text = tooltip.querySelector('.tooltip-text');
+            if (text) {
+                text.style.visibility = 'hidden';
+                text.style.opacity = '0';
+            }
+        });
+    });
+});
+</script>
+{% endblock %}

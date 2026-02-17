@@ -1,0 +1,580 @@
+{% extends 'base.html' %}
+
+{% block title %}Register | SkillTrack{% endblock %}
+
+{% block extra_css %}
+<style>
+:root {
+    --primary-blue: #2563eb;
+    --blue-light: #dbeafe;
+    --blue-medium: #60a5fa;
+    --blue-dark: #1d4ed8;
+    --blue-soft: #eff6ff;
+    --blue-gradient: linear-gradient(135deg, #2563eb, #3b82f6, #60a5fa);
+    --text-dark: #1e293b;
+    --text-medium: #475569;
+    --text-light: #64748b;
+    --bg-white: #ffffff;
+    --bg-light: #f8fafc;
+    --border-light: #e2e8f0;
+    --border-medium: #cbd5e1;
+    --shadow-light: 0 4px 20px rgba(37, 99, 235, 0.08);
+    --shadow-medium: 0 10px 40px rgba(37, 99, 235, 0.12);
+    --shadow-heavy: 0 20px 60px rgba(37, 99, 235, 0.15);
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+}
+
+body {
+    background-color: var(--bg-light);
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+.register-container {
+    max-width: 50%;
+    margin: 100px auto;
+    padding: 0 20px;
+}
+
+.register-card {
+    background: var(--bg-white);
+    padding: 3.5rem;
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-heavy);
+    border: 1px solid var(--border-light);
+    position: relative;
+    overflow: hidden;
+}
+
+.register-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background: var(--blue-gradient);
+}
+
+h2 {
+    text-align: center;
+    color: var(--text-dark);
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 2.5rem;
+    line-height: 1.2;
+}
+
+h2 span {
+    background: var(--blue-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 800;
+}
+
+.form-group {
+    margin-bottom: 1.8rem;
+    position: relative;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 1.8rem;
+}
+
+.form-label {
+    font-weight: 600;
+    margin-bottom: 0.6rem;
+    display: block;
+    color: var(--text-dark);
+    font-size: 0.95rem;
+    letter-spacing: -0.01em;
+}
+
+.form-input, .form-select, .form-textarea,
+input[type="text"], input[type="email"], input[type="password"],
+select, textarea {
+    width: 100%;
+    padding: 1rem 1.2rem;
+    border-radius: var(--radius-md);
+    border: 2px solid var(--border-medium);
+    font-size: 1rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    background: var(--bg-white);
+    box-sizing: border-box;
+    color: var(--text-dark);
+    font-family: inherit;
+}
+
+.form-input::placeholder, .form-textarea::placeholder {
+    color: var(--text-light);
+    opacity: 0.7;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus,
+input[type="text"]:focus, input[type="email"]:focus, input[type="password"]:focus,
+select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.15);
+    background: var(--bg-white);
+}
+
+input[type="text"], input[type="email"], input[type="password"] {
+    height: 52px;
+}
+
+select {
+    height: 52px;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%232563eb' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1.2rem center;
+    background-size: 1.25rem;
+    padding-right: 3.5rem;
+    cursor: pointer;
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 1.1rem;
+    background: var(--blue-gradient);
+    color: var(--bg-white);
+    border-radius: var(--radius-md);
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 1.5rem;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+    background: linear-gradient(135deg, #1d4ed8, #2563eb, #3b82f6);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 6px 20px rgba(37, 99, 235, 0.2);
+}
+
+.error-message {
+    background: #fee2e2;
+    border: 1px solid #ef4444;
+    color: #dc2626;
+    padding: 1.2rem 1.5rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.error-message ul {
+    margin: 0.5rem 0 0 1.2rem;
+    padding: 0;
+}
+
+.help-text {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-top: 0.25rem;
+    display: block;
+    line-height: 1.2;
+}
+
+.password-section {
+    background: var(--blue-soft);
+    padding: 1.8rem;
+    border-radius: var(--radius-lg);
+    margin: 1.5rem 0 2rem;
+    border: 1px solid var(--border-light);
+}
+
+.password-section h3 {
+    color: var(--text-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+}
+
+.password-requirements {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.password-requirements li {
+    font-size: 0.85rem;
+    color: var(--text-medium);
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.password-requirements li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--primary-blue);
+    font-weight: bold;
+}
+
+.login-link {
+    text-align: center;
+    margin-top: 2rem;
+    color: var(--text-medium);
+    font-size: 0.95rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+}
+
+.login-link a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    font-weight: 600;
+    margin-left: 0.25rem;
+    transition: color 0.2s ease;
+}
+
+.login-link a:hover {
+    color: var(--blue-dark);
+    text-decoration: underline;
+}
+
+/* Field animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.form-group {
+    animation: slideIn 0.4s ease forwards;
+    opacity: 0;
+}
+
+.form-group:nth-child(1) { animation-delay: 0.1s; }
+.form-group:nth-child(2) { animation-delay: 0.15s; }
+.form-group:nth-child(3) { animation-delay: 0.2s; }
+.form-group:nth-child(4) { animation-delay: 0.25s; }
+.form-group:nth-child(5) { animation-delay: 0.3s; }
+.form-group:nth-child(6) { animation-delay: 0.35s; }
+.form-group:nth-child(7) { animation-delay: 0.4s; }
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .register-container {
+        max-width: 100%;
+        margin: 60px auto;
+        padding: 0 16px;
+    }
+    
+    .register-card {
+        padding: 2rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+    
+    h2 {
+        font-size: 1.75rem;
+        margin-bottom: 2rem;
+    }
+    
+    .password-requirements {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 480px) {
+    .register-card {
+        padding: 1.5rem;
+        border-radius: var(--radius-lg);
+    }
+    
+    h2 {
+        font-size: 1.5rem;
+    }
+    
+    .form-input, .form-select,
+    input[type="text"], input[type="email"], input[type="password"],
+    select {
+        padding: 0.9rem 1rem;
+        height: 48px;
+    }
+}
+
+/* Form field icons */
+.form-group {
+    position: relative;
+}
+
+.form-group .field-icon {
+    position: absolute;
+    right: 1.2rem;
+    top: 2.8rem;
+    color: var(--text-light);
+    pointer-events: none;
+}
+
+/* Success message styling */
+.success-message {
+    background: #d1fae5;
+    border: 1px solid #10b981;
+    color: #047857;
+    padding: 1.2rem 1.5rem;
+    border-radius: var(--radius-md);
+    margin-bottom: 2rem;
+    font-size: 0.95rem;
+}
+
+/* Loading animation */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
+
+.btn-primary.loading {
+    animation: pulse 1.5s infinite;
+}
+
+/* Custom focus styles for accessibility */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+}
+
+/* Validation styles */
+.form-input.valid {
+    border-color: #10b981;
+}
+
+.form-input.invalid {
+    border-color: #ef4444;
+}
+
+/* Placeholder styling */
+input::placeholder,
+textarea::placeholder {
+    color: #94a3b8;
+    opacity: 0.8;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="register-container">
+    <div class="register-card">
+        <h2>Create Your <span>SkillTrack</span> Account</h2>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="{% if message.tags == 'error' %}error-message{% else %}success-message{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="POST" id="registerForm" class="register-form">
+            {% csrf_token %}
+            
+            {% if user_form.errors or profile_form.errors %}
+    <div class="error-message">
+        <strong>Please correct the following errors:</strong>
+        <ul>
+            {# 🔹 User form field errors #}
+            {% for field in user_form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {# 🔹 User form non-field errors (PASSWORD ERRORS) #}
+            {% for error in user_form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+
+            {# 🔹 Profile form field errors #}
+            {% for field in profile_form %}
+                {% for error in field.errors %}
+                    <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+            {% endfor %}
+
+            {# 🔹 Profile form non-field errors (just in case) #}
+            {% for error in profile_form.non_field_errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="id_username">Username</label>
+                    {{ user_form.username }}
+                    <span class="help-text">Enter Your Full Name</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="id_email">Email Address</label>
+                    {{ user_form.email }}
+                    <span class="help-text">Enter your email address</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="id_password1">Password</label>
+                    {{ user_form.password }}
+                    <span class="help-text">Create a strong password</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="id_password2">Confirm Password</label>
+                    {{ user_form.confirm_password }}
+                    <span class="help-text">Re-enter your password</span>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label class="form-label" for="id_role">Role</label>
+                    {{ profile_form.role }}
+                    <span class="help-text">Are you a...</span>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="id_experience_level">Experience Level</label>
+                    {{ profile_form.experience_level }}
+                    <span class="help-text">Current skill level</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label" for="id_education">Education Background</label>
+                {{ profile_form.education }}
+                <span class="help-text">Tell us about your educational background</span>
+            </div>
+            
+            <button type="submit" class="btn-primary" id="submitBtn">
+                Create Account
+            </button>
+        </form>
+        
+        <div class="login-link">
+            Already have an account?
+            <a href="{% url 'login_view' %}">Sign in here</a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('registerForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    // Add focus/blur styling
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.classList.add('focused');
+            const label = this.parentElement.querySelector('.form-label');
+            if (label) {
+                label.style.color = '#2563eb';
+            }
+        });
+        
+        input.addEventListener('blur', function() {
+            this.parentElement.classList.remove('focused');
+            const label = this.parentElement.querySelector('.form-label');
+            if (label) {
+                label.style.color = '';
+            }
+            
+            // Basic validation
+            if (this.value.trim() !== '') {
+                this.classList.add('valid');
+                this.classList.remove('invalid');
+            } else if (this.required) {
+                this.classList.add('invalid');
+                this.classList.remove('valid');
+            }
+        });
+        
+        // Add real-time validation for password
+        if (input.type === 'password' || input.name === 'confirm_password') {
+            input.addEventListener('input', function() {
+                validatePasswords();
+            });
+        }
+    });
+    
+    function validatePasswords() {
+        const password1 = document.getElementById('id_password');
+        const password2 = document.getElementById('id_confirm_password');
+        
+        if (!password1 || !password2) return;
+        
+        if (password2.value && password1.value !== password2.value) {
+            password2.classList.add('invalid');
+            password2.classList.remove('valid');
+        } else if (password2.value) {
+            password2.classList.add('valid');
+            password2.classList.remove('invalid');
+        }
+    }
+    
+    // Form submission handling
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        
+        inputs.forEach(input => {
+            if (input.required && !input.value.trim()) {
+                input.classList.add('invalid');
+                isValid = false;
+            }
+        });
+        
+        if (!isValid) {
+            e.preventDefault();
+            submitBtn.classList.add('loading');
+            setTimeout(() => submitBtn.classList.remove('loading'), 1500);
+        } else {
+            submitBtn.textContent = 'Creating Account...';
+            submitBtn.disabled = true;
+        }
+    });
+    
+    // Auto-select first option if none selected
+    const selectElements = form.querySelectorAll('select');
+    selectElements.forEach(select => {
+        if (!select.value && select.options.length > 0) {
+            select.value = select.options[0].value;
+        }
+    });
+});
+</script>
+{% endblock %}

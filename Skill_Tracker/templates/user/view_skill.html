@@ -1,0 +1,756 @@
+{% extends 'base2.html' %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --blue-primary: #2563eb;
+        --blue-deep: #1e40af;
+        --blue-medium: #3b82f6;
+        --blue-light: #60a5fa;
+        --blue-sky: #93c5fd;
+        --blue-pale: #eff6ff;
+        --blue-dark: #1e3a8a;
+        --neutral-white: #ffffff;
+        --neutral-light: #f8fafc;
+        --neutral-gray: #64748b;
+        --neutral-dark: #334155;
+        --shadow-soft: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --success-green: #10b981;
+        --warning-orange: #f59e0b;
+        --error-red: #ef4444;
+        --purple: #8b5cf6;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, var(--blue-pale) 0%, var(--neutral-light) 100%);
+        color: var(--neutral-dark);
+        min-height: 100vh;
+        line-height: 1.5;
+    }
+
+    .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* Breadcrumb Navigation */
+    .breadcrumb {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+        font-size: 0.95rem;
+    }
+
+    .breadcrumb a {
+        color: var(--neutral-gray);
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+
+    .breadcrumb a:hover {
+        color: var(--blue-primary);
+    }
+
+    .breadcrumb .separator {
+        color: var(--neutral-gray);
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+
+    .breadcrumb .current {
+        color: var(--blue-dark);
+        font-weight: 500;
+    }
+
+    /* Main Layout */
+    .skill-view-container {
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        gap: 2rem;
+        margin-top: 1rem;
+    }
+
+    /* Cards Base */
+    .card {
+        background: var(--neutral-white);
+        border-radius: 1.5rem;
+        padding: 2rem;
+        box-shadow: var(--shadow-soft);
+        border: 1px solid var(--blue-sky);
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+        box-shadow: 0 10px 25px -5px rgba(37, 99, 235, 0.1), 0 8px 10px -6px rgba(37, 99, 235, 0.1);
+    }
+
+    .card-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 1.5rem;
+        padding-bottom: 0.75rem;
+        border-bottom: 2px solid var(--blue-pale);
+    }
+
+    .card-header h2, .card-header h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--blue-dark);
+        margin: 0;
+    }
+
+    /* Header Section */
+    .skill-header {
+        display: flex;
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+        align-items: flex-start;
+    }
+
+    .skill-icon-large {
+        width: 80px;
+        height: 80px;
+        background: linear-gradient(135deg, var(--blue-primary), var(--blue-light));
+        border-radius: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--neutral-white);
+        font-size: 2rem;
+        font-weight: 600;
+        flex-shrink: 0;
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+    }
+
+    .skill-title-section {
+        flex: 1;
+    }
+
+    .skill-title-section h1 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--blue-dark);
+        letter-spacing: -0.025em;
+    }
+
+    /* Badges */
+    .badge-container {
+        display: flex;
+        gap: 0.75rem;
+        margin: 1rem 0;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        padding: 0.375rem 1rem;
+        border-radius: 2rem;
+        font-weight: 600;
+        font-size: 0.875rem;
+        display: inline-flex;
+        align-items: center;
+        letter-spacing: 0.025em;
+    }
+
+    .badge-beginner { 
+        background: rgba(16, 185, 129, 0.08); 
+        color: var(--success-green);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .badge-intermediate { 
+        background: rgba(245, 158, 11, 0.08); 
+        color: var(--warning-orange);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+    }
+    .badge-advanced { 
+        background: rgba(239, 68, 68, 0.08); 
+        color: var(--error-red);
+        border: 1px solid rgba(239, 68, 68, 0.2);
+    }
+    .badge-expert { 
+        background: rgba(139, 92, 246, 0.08); 
+        color: var(--purple);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+    .badge-active { 
+        background: rgba(16, 185, 129, 0.08); 
+        color: var(--success-green);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+    .badge-inactive { 
+        background: rgba(100, 116, 139, 0.08); 
+        color: var(--neutral-gray);
+        border: 1px solid rgba(100, 116, 139, 0.2);
+    }
+    .badge-completed { 
+        background: rgba(139, 92, 246, 0.08); 
+        color: var(--purple);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+    }
+
+    /* Action Buttons */
+    .action-bar {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 2rem;
+        text-decoration: none;
+        font-weight: 500;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 0.95rem;
+        letter-spacing: 0.025em;
+    }
+
+    .btn-primary {
+        background: var(--blue-primary);
+        color: var(--neutral-white);
+    }
+
+    .btn-primary:hover {
+        background: var(--blue-deep);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-success {
+        background: var(--success-green);
+        color: var(--neutral-white);
+    }
+
+    .btn-success:hover {
+        background: #059669;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.25);
+    }
+
+    .btn-outline {
+        background: transparent;
+        color: var(--blue-primary);
+        border: 1px solid var(--blue-primary);
+    }
+
+    .btn-outline:hover {
+        background: var(--blue-pale);
+        transform: translateY(-1px);
+    }
+
+    .btn-danger {
+        background: var(--error-red);
+        color: var(--neutral-white);
+    }
+
+    .btn-danger:hover {
+        background: #dc2626;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    }
+
+    /* Info Grid */
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .info-card {
+        background: var(--blue-pale);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid var(--blue-sky);
+    }
+
+    .info-card .label {
+        display: block;
+        color: var(--neutral-gray);
+        font-size: 0.875rem;
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+
+    .info-card .value {
+        font-size: 1.125rem;
+        font-weight: 600;
+        color: var(--blue-dark);
+    }
+
+    /* Description */
+    .description-section {
+        background: var(--blue-pale);
+        padding: 1.5rem;
+        border-radius: 1rem;
+        border: 1px solid var(--blue-sky);
+        margin-top: 2rem;
+    }
+
+    .description-section h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        color: var(--blue-dark);
+    }
+
+    .description-content {
+        line-height: 1.7;
+        color: var(--neutral-dark);
+    }
+
+    /* Sidebar */
+    .sidebar {
+        display: flex;
+        flex-direction: column;
+        gap: 2rem;
+    }
+
+    /* Stats List */
+    .stats-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .stat-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 1.25rem;
+        background: var(--blue-pale);
+        border-radius: 0.75rem;
+        align-items: center;
+        transition: background-color 0.2s ease;
+    }
+
+    .stat-item:hover {
+        background: var(--blue-sky);
+    }
+
+    .stat-label {
+        color: var(--neutral-gray);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .stat-value {
+        font-weight: 600;
+        color: var(--blue-dark);
+    }
+
+    /* Quick Actions List */
+    .actions-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .action-link {
+        display: block;
+        padding: 1rem 1.25rem;
+        background: var(--blue-pale);
+        border-radius: 0.75rem;
+        text-decoration: none;
+        color: var(--blue-dark);
+        transition: all 0.2s ease;
+        font-weight: 500;
+        border: 1px solid transparent;
+    }
+
+    .action-link:hover {
+        background: var(--blue-primary);
+        color: var(--neutral-white);
+        transform: translateX(4px);
+        border-color: var(--blue-deep);
+    }
+
+    /* Status Colors */
+    .status-active { color: var(--success-green); }
+    .status-inactive { color: var(--neutral-gray); }
+    .status-today { color: var(--success-green); }
+    .status-needs-practice { color: var(--warning-orange); }
+    .status-never { color: var(--error-red); }
+
+    /* Toast */
+    .toast {
+        position: fixed;
+        top: 1.5rem;
+        right: 1.5rem;
+        padding: 1rem 1.5rem;
+        background: var(--neutral-white);
+        border-radius: 1rem;
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-left: 4px solid var(--warning-orange);
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+        max-width: 400px;
+    }
+
+    .toast-content {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .toast-message {
+        flex: 1;
+        color: var(--neutral-dark);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .toast-close {
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--neutral-gray);
+        padding: 0 0.25rem;
+        line-height: 1;
+        transition: color 0.2s ease;
+    }
+
+    .toast-close:hover {
+        color: var(--neutral-dark);
+    }
+
+    .toast-warning { border-left-color: var(--warning-orange); }
+    .toast-info { border-left-color: var(--blue-primary); }
+
+    @keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+        .skill-view-container {
+            grid-template-columns: 1fr;
+        }
+        
+        .sidebar {
+            order: -1;
+        }
+
+        .container {
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .skill-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .skill-icon-large {
+            margin-bottom: 0.5rem;
+        }
+        
+        .action-bar {
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .btn {
+            width: 100%;
+        }
+        
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .skill-title-section h1 {
+            font-size: 1.875rem;
+        }
+    }
+
+    @media print {
+        .btn,
+        .sidebar,
+        .toast {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Toast Notification -->
+    <div id="goal-toast" class="toast toast-warning" style="display: none;">
+        <div class="toast-content">
+            <span class="toast-message" id="toast-message"></span>
+            <button class="toast-close" onclick="closeToast()">×</button>
+        </div>
+    </div>
+
+    <!-- Breadcrumb Navigation -->
+    <nav class="breadcrumb">
+        <a href="{% url 'skill_list' %}">Skills</a>
+        <span class="separator">›</span>
+        <span class="current">{{ skill.title }}</span>
+    </nav>
+
+    <div class="skill-view-container">
+        <!-- Main Content -->
+        <main class="card">
+            <!-- Header with Icon and Title -->
+            <div class="skill-header">
+                <div class="skill-icon-large">{{ skill.title|first|upper }}</div>
+                <div class="skill-title-section">
+                    <h1>{{ skill.title }}</h1>
+                    
+                    <!-- Badges -->
+                    <div class="badge-container">
+                        <span class="badge badge-{{ skill.proficiency_level|lower }}">
+                            {{ skill.proficiency_level }}
+                        </span>
+                        
+                        <span class="badge {% if skill.is_active %}badge-active{% else %}badge-inactive{% endif %}">
+                            {% if skill.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                        
+                        {% if skill.is_completed %}
+                        <span class="badge badge-completed">Completed</span>
+                        {% endif %}
+                    </div>
+
+                    <!-- Action Bar -->
+                    <div class="action-bar">
+                        {% with goal_count=skill.goals.count %}
+                            {% if goal_count > 0 %}
+                                <a href="{% url 'view_goals' skill.id %}" class="btn btn-success">
+    View All Goals ({{ skill.goals.count }})
+</a>
+
+                                {% if goal_count > 1 %}
+                                    <a href="{% url 'skill_goal' %}" class="btn btn-outline">
+                                        Add Goals 
+                                    </a>
+                                {% endif %}
+                            {% else %}
+                                <a href="{% url 'add_goal' skill.id %}" class="btn btn-primary" id="add-goal-btn">
+                                    + Add First Goal
+                                </a>
+                            {% endif %}
+                        {% endwith %}
+                        
+                        {% if not skill.is_completed %}
+                            <form method="post" action="{% url 'mark_skill_completed' skill.id %}" style="display:inline;">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-success">
+                                    ✓ Mark Completed
+                                </button>
+                            </form>
+                        {% else %}
+                            <span class="btn btn-success" style="opacity:0.7; cursor:default;">
+                                ✓ Completed
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Information Grid -->
+            <div class="info-grid">
+                <div class="info-card">
+                    <span class="label">Last Practiced</span>
+                    <span class="value">
+                        {% if skill.last_practiced %}
+                            {{ skill.last_practiced|date:"F j, Y" }}
+                        {% else %}
+                            <span class="status-never">Never</span>
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="info-card">
+                    <span class="label">Created On</span>
+                    <span class="value">{{ skill.created_at|date:"F j, Y" }}</span>
+                </div>
+                
+                <div class="info-card">
+                    <span class="label">Last Updated</span>
+                    <span class="value">
+                        {% if skill.updated_at %}
+                            {{ skill.updated_at|date:"F j, Y" }}
+                        {% else %}
+                            <span class="status-never">Never</span>
+                        {% endif %}
+                    </span>
+                </div>
+                
+                <div class="info-card">
+                    <span class="label">Proficiency</span>
+                    <span class="value">{{ skill.proficiency_level }}</span>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="description-section">
+                <h3>About this Skill</h3>
+                {% if skill.description %}
+                    <div class="description-content">{{ skill.description|linebreaks }}</div>
+                {% else %}
+                    <p class="status-never">No description provided.</p>
+                {% endif %}
+            </div>
+        </main>
+
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <!-- Stats Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Statistics</h3>
+                </div>
+                
+                <div class="stats-list">
+                    <div class="stat-item">
+                        <span class="stat-label">Status</span>
+                        <span class="stat-value {% if skill.is_active %}status-active{% else %}status-inactive{% endif %}">
+                            {% if skill.is_active %}Active{% else %}Inactive{% endif %}
+                        </span>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-label">Active Duration</span>
+                        <span class="stat-value">{{ skill.created_at|timesince }}</span>
+                    </div>
+                    
+                    <div class="stat-item">
+                        <span class="stat-label">Practice Status</span>
+                        <span class="stat-value">
+                            {% if skill.last_practiced %}
+                                {% now "Y-m-d" as today %}
+                                {% with last=skill.last_practiced|date:"Y-m-d" %}
+                                    {% if last == today %}
+                                        <span class="status-today">Practiced Today</span>
+                                    {% else %}
+                                        <span class="status-needs-practice">Needs Practice</span>
+                                    {% endif %}
+                                {% endwith %}
+                            {% else %}
+                                <span class="status-never">Never Practiced</span>
+                            {% endif %}
+                        </span>
+                    </div>
+
+                    <div class="stat-item">
+                        <span class="stat-label">Goals</span>
+                        <span class="stat-value">
+                            {% with goal_count=skill.goals.count %}
+                                {% if goal_count > 0 %}
+                                    <span class="status-active">{{ goal_count }}</span>
+                                {% else %}
+                                    <span class="status-inactive">0</span>
+                                {% endif %}
+                            {% endwith %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h3>Quick Actions</h3>
+                </div>
+                
+                <div class="actions-list">
+                    {% with goal_count=skill.goals.count %}
+                        {% if goal_count > 0 %}
+                            {% for goal in skill.goals.all|slice:":1" %}
+                                <a href="{% url 'edit_goal' goal.id %}" class="action-link">
+                                    ✎ Edit Current Goal
+                                </a>
+                            {% endfor %}
+                        {% else %}
+                            <a href="{% url 'add_goal' skill.id %}" class="action-link">
+                                + Add New Goal
+                            </a>
+                        {% endif %}
+                    {% endwith %}
+                    
+                    <a href="{% url 'edit_skill' skill.id %}" class="action-link">
+                        ⚙ Edit Skill Details
+                    </a>
+                    
+                    <a href="{% url 'skill_list' %}" class="action-link">
+                        ← Back to Skills
+                    </a>
+                    
+                    <a href="{% url 'add_skill' %}" class="action-link">
+                        + Create New Skill
+                    </a>
+                    
+                    <a href="{% url 'delete_skill' skill.id %}" class="action-link" id="delete-btn" style="color: var(--error-red);">
+                        × Delete Skill
+                    </a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Delete confirmation
+        const deleteBtn = document.getElementById('delete-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const skillName = '{{ skill.title|escapejs }}';
+                if (confirm(`Are you sure you want to delete "${skillName}"? This action cannot be undone.`)) {
+                    window.location.href = this.href;
+                }
+            });
+        }
+    });
+
+    // Toast functions
+    function closeToast() {
+        const toast = document.getElementById('goal-toast');
+        toast.style.display = 'none';
+    }
+
+    function showToast(message, type = 'info') {
+        const toast = document.getElementById('goal-toast');
+        const toastMessage = document.getElementById('toast-message');
+        
+        toast.className = 'toast';
+        toast.classList.add(type === 'warning' ? 'toast-warning' : 'toast-info');
+        toastMessage.textContent = message;
+        toast.style.display = 'block';
+        
+        setTimeout(closeToast, 5000);
+    }
+</script>
+{% endblock %}

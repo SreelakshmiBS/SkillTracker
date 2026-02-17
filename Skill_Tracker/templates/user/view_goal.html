@@ -1,0 +1,642 @@
+{% extends "base2.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --blue-primary: #0066FF;
+        --blue-deep: #003D99;
+        --blue-medium: #3385FF;
+        --blue-light: #6BA3FF;
+        --blue-sky: #A3C9FF;
+        --blue-pale: #E6F0FF;
+        --blue-dark: #001F4D;
+        --neutral-white: #FFFFFF;
+        --neutral-light: #F8FAFB;
+        --neutral-gray: #64748B;
+        --shadow-soft: rgba(0, 61, 153, 0.08);
+        --shadow-medium: rgba(0, 61, 153, 0.12);
+        --success-green: #10B981;
+        --warning-orange: #F59E0B;
+        --error-red: #EF4444;
+        --purple: #8B5CF6;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Outfit', sans-serif;
+        background: linear-gradient(135deg, var(--blue-pale), var(--neutral-light));
+        color: var(--blue-dark);
+        min-height: 100vh;
+    }
+
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 30px 20px;
+    }
+
+    /* Header */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px var(--shadow-soft);
+        border: 1px solid var(--blue-sky);
+    }
+
+    .header-content h1 {
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: var(--blue-dark);
+        margin-bottom: 0.5rem;
+    }
+
+    .header-content p {
+        color: var(--neutral-gray);
+        font-size: 1rem;
+    }
+
+    .btn-add-goal {
+        background: var(--blue-primary);
+        color: var(--neutral-white);
+        text-decoration: none;
+        padding: 14px 28px;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        border: none;
+        cursor: pointer;
+        font-size: 1rem;
+    }
+
+    .btn-add-goal:hover {
+        background: var(--blue-deep);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+    }
+
+    /* Section Styles */
+    .section {
+        margin-bottom: 50px;
+    }
+
+    .section-header {
+        margin-bottom: 25px;
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--blue-dark);
+    }
+
+    .section-title small {
+        font-size: 1rem;
+        color: var(--neutral-gray);
+        font-weight: normal;
+        margin-left: 10px;
+    }
+
+    /* Horizontal Cards Container */
+    .horizontal-scroll {
+        display: flex;
+        gap: 25px;
+        overflow-x: auto;
+        padding: 10px 5px 20px 5px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--blue-primary) var(--blue-pale);
+    }
+
+    .horizontal-scroll::-webkit-scrollbar {
+        height: 8px;
+    }
+
+    .horizontal-scroll::-webkit-scrollbar-track {
+        background: var(--blue-pale);
+        border-radius: 10px;
+    }
+
+    .horizontal-scroll::-webkit-scrollbar-thumb {
+        background: var(--blue-primary);
+        border-radius: 10px;
+    }
+
+    .horizontal-scroll::-webkit-scrollbar-thumb:hover {
+        background: var(--blue-deep);
+    }
+
+    /* Goal Card */
+    .goal-card {
+        background: white;
+        border-radius: 24px;
+        padding: 25px;
+        box-shadow: 0 10px 30px var(--shadow-soft);
+        border: 1px solid var(--blue-sky);
+        min-width: 400px;
+        max-width: 400px;
+        flex-shrink: 0;
+        transition: all 0.3s ease;
+        position: relative;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .goal-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 40px var(--shadow-medium);
+    }
+
+    .goal-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 5px;
+        background: linear-gradient(90deg, var(--blue-primary), var(--blue-light));
+        border-radius: 24px 24px 0 0;
+    }
+
+    /* Card Header */
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+    }
+
+    .skill-info {
+        flex: 1;
+    }
+
+    .skill-title {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: var(--blue-dark);
+        margin-bottom: 5px;
+        line-height: 1.3;
+    }
+
+    .skill-category {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--blue-pale);
+        border-radius: 50px;
+        font-size: 0.8rem;
+        color: var(--blue-primary);
+        font-weight: 500;
+    }
+
+    /* Status Badge */
+    .status-badge {
+        padding: 6px 16px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .status-active {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-green);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status-completed {
+        background: rgba(139, 92, 246, 0.1);
+        color: var(--purple);
+        border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    /* Goal Description */
+    .goal-description {
+        color: var(--neutral-gray);
+        font-size: 0.95rem;
+        margin-bottom: 20px;
+        line-height: 1.6;
+        padding: 15px;
+        background: var(--blue-pale);
+        border-radius: 12px;
+        border: 1px solid var(--blue-sky);
+    }
+
+    /* Progress Bar */
+    .progress-container {
+        margin-bottom: 25px;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .progress-header span:first-child {
+        color: var(--neutral-gray);
+        font-weight: 500;
+        font-size: 0.95rem;
+    }
+
+    .progress-percent {
+        font-weight: 700;
+        color: var(--blue-primary);
+        font-size: 1.1rem;
+    }
+
+    .progress-bar {
+        height: 8px;
+        background-color: var(--blue-pale);
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--blue-primary), var(--blue-light));
+        border-radius: 10px;
+        transition: width 1s ease;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 25px;
+        padding: 15px;
+        background: var(--blue-pale);
+        border-radius: 16px;
+        border: 1px solid var(--blue-sky);
+    }
+
+    .stat-item {
+        text-align: center;
+    }
+
+    .stat-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: var(--blue-dark);
+        margin-bottom: 4px;
+    }
+
+    .stat-label {
+        font-size: 0.8rem;
+        color: var(--neutral-gray);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 12px;
+    }
+
+    .btn-view, .btn-edit, .btn-progress {
+        padding: 15px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        flex: 1;
+        text-align: center;
+        font-size: 0.95rem;
+    }
+
+    .btn-view {
+        background: var(--blue-primary);
+        color: white;
+    }
+
+    .btn-view:hover {
+        background: var(--blue-deep);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+    }
+
+    .btn-edit {
+        background: white;
+        color: var(--blue-primary);
+        border: 1px solid var(--blue-primary);
+    }
+
+    .btn-edit:hover {
+        background: var(--blue-pale);
+        transform: translateY(-2px);
+    }
+
+    .btn-progress {
+        
+        background: var(--success-green);
+        color: white;
+    }
+
+    .btn-progress:hover {
+        background: #0ea271;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-restart {
+        background: var(--warning-orange);
+        color: white;
+        border: none;
+    }
+
+    .btn-restart:hover {
+        background: #e68a00;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 30px;
+        box-shadow: 0 10px 30px var(--shadow-soft);
+        border: 1px solid var(--blue-sky);
+    }
+
+    .empty-state h2 {
+        font-size: 2rem;
+        margin-bottom: 15px;
+        color: var(--blue-dark);
+    }
+
+    .empty-state p {
+        color: var(--neutral-gray);
+        margin-bottom: 30px;
+        font-size: 1.1rem;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .empty-state .btn-add-goal {
+        display: inline-flex;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .container {
+            padding: 20px 15px;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 20px;
+            padding: 1.5rem;
+        }
+
+        .header-content h1 {
+            font-size: 1.8rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+        }
+
+        .goal-card {
+            min-width: 320px;
+            max-width: 320px;
+            padding: 20px;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .goal-card {
+            min-width: 280px;
+            max-width: 280px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Page Header -->
+    <div class="page-header">
+        <div class="header-content">
+            <h1>
+    {% if skill %}
+        Goals for "{{ skill.title }}"
+    {% else %}
+        All Skill Goals
+    {% endif %}
+</h1>
+
+            <p>Track and manage your learning objectives</p>
+        </div>
+        <a href="{% url 'skill_goal' %}" class="btn-add-goal">
+            New Goal
+        </a>
+    </div>
+
+    {% if goals %}
+        <!-- Active Goals Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    Active Goals
+                    <small>({{ active_count }} in progress)</small>
+                </h2>
+            </div>
+            
+            <div class="horizontal-scroll">
+                {% for goal in goals %}
+                    {% if not goal.is_completed %}
+                    <div class="goal-card">
+                        <div class="card-header">
+                            <div class="skill-info">
+                                <h3 class="skill-title">{{ goal.skill.title }}</h3>
+                                <span class="skill-category">{{ goal.skill.proficiency_level|default:"Skill" }}</span>
+                            </div>
+                            <span class="status-badge status-active">Active</span>
+                        </div>
+                        
+                        {% if goal.description %}
+                        <div class="goal-description">
+                            {{ goal.description|truncatechars:120 }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <span>Progress</span>
+                                <span class="progress-percent">{{ goal.progress_percentage|default:"0" }}%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {{ goal.progress_percentage|default:'0' }}%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">{{ goal.daily_study_hours|default:"0" }}h</div>
+                                <div class="stat-label">Daily</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ goal.total_days|default:"0" }}d</div>
+                                <div class="stat-label">Duration</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ goal.target_date|date:"M d"|default:"—" }}</div>
+                                <div class="stat-label">Target</div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <a href="{% url 'goal_detail' goal.id %}" class="btn-view">View</a>
+                            <a href="{% url 'edit_goal' goal.id %}" class="btn-edit">Edit</a>
+                            <a href="{% url 'add_skill_progress' goal.id %}?goal={{ goal.id }}" class="btn-progress">Progress</a>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Completed Goals Section -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    Completed Goals
+                    <small>({{ completed_count }} achieved)</small>
+                </h2>
+            </div>
+            
+            <div class="horizontal-scroll">
+                {% for goal in goals %}
+                    {% if goal.is_completed %}
+                    <div class="goal-card">
+                        <div class="card-header">
+                            <div class="skill-info">
+                                <h3 class="skill-title">{{ goal.skill.title }}</h3>
+                                <span class="skill-category">{{ goal.skill.proficiency_level|default:"Skill" }}</span>
+                            </div>
+                            <span class="status-badge status-completed">Completed</span>
+                        </div>
+                        
+                        {% if goal.description %}
+                        <div class="goal-description">
+                            {{ goal.description|truncatechars:120 }}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <span>Progress</span>
+                                <span class="progress-percent">100%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%;"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <div class="stat-value">{{ goal.daily_study_hours|default:"0" }}h</div>
+                                <div class="stat-label">Daily</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">{{ goal.total_days|default:"0" }}d</div>
+                                <div class="stat-label">Duration</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-value">✓</div>
+                                <div class="stat-label">Achieved</div>
+                            </div>
+                        </div>
+                        
+                        <div class="action-buttons">
+                            <a href="{% url 'goal_detail' goal.id %}" class="btn-view">View</a>
+                            {% comment %} <a href="{% url 'restart_goal' goal.id %}" class="btn-edit btn-restart">Restart</a> {% endcomment %}
+                        </div>
+                    </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <h2>No Goals Yet</h2>
+            <p>Start your learning journey by creating your first skill goal.</p>
+            <a href="{% url 'skill_goal' %}" class="btn-add-goal">
+                Create First Goal
+            </a>
+        </div>
+    {% endif %}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Smooth horizontal scroll with mouse wheel
+        const scrollContainers = document.querySelectorAll('.horizontal-scroll');
+        scrollContainers.forEach(container => {
+            container.addEventListener('wheel', function(e) {
+                if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                    e.preventDefault();
+                    this.scrollLeft += e.deltaY;
+                }
+            });
+        });
+
+        // Animate progress bars on scroll
+        const progressBars = document.querySelectorAll('.progress-fill');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBar = entry.target;
+                    const width = progressBar.style.width;
+                    progressBar.style.width = '0%';
+                    
+                    setTimeout(() => {
+                        progressBar.style.transition = 'width 1s cubic-bezier(0.4, 0, 0.2, 1)';
+                        progressBar.style.width = width;
+                    }, 200);
+                    
+                    observer.unobserve(progressBar);
+                }
+            });
+        }, { threshold: 0.3 });
+        
+        progressBars.forEach(bar => observer.observe(bar));
+    });
+</script>
+{% endblock %}

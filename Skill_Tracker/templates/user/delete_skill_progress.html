@@ -1,0 +1,9 @@
+<h2>Delete Progress</h2>
+
+<p>Are you sure you want to delete progress for <b>{{ progress.skill }}</b> on {{ progress.date }}?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">Yes, Delete</button>
+    <a href="{% url 'skill_progress_list' %}">Cancel</a>
+</form>

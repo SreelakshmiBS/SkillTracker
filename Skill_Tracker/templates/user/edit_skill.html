@@ -1,0 +1,703 @@
+{% extends "base2.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- Fonts and Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    :root {
+        --primary-50: #eff6ff;
+        --primary-100: #dbeafe;
+        --primary-200: #bfdbfe;
+        --primary-300: #93c5fd;
+        --primary-400: #60a5fa;
+        --primary-500: #3b82f6;
+        --primary-600: #2563eb;
+        --primary-700: #1d4ed8;
+        --primary-800: #1e40af;
+        --primary-900: #1e3a8a;
+        
+        --gray-50: #f9fafb;
+        --gray-100: #f3f4f6;
+        --gray-200: #e5e7eb;
+        --gray-300: #d1d5db;
+        --gray-400: #9ca3af;
+        --gray-500: #6b7280;
+        --gray-600: #4b5563;
+        --gray-700: #374151;
+        --gray-800: #1f2937;
+        --gray-900: #111827;
+        
+        --success-50: #ecfdf5;
+        --success-100: #d1fae5;
+        --success-500: #10b981;
+        --success-600: #059669;
+        --success-700: #047857;
+        
+        --error-50: #fef2f2;
+        --error-100: #fee2e2;
+        --error-500: #ef4444;
+        --error-600: #dc2626;
+        
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        
+        --radius-sm: 0.375rem;
+        --radius-md: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, var(--gray-50) 0%, var(--primary-50) 100%);
+        color: var(--gray-900);
+        line-height: 1.5;
+        min-height: 100vh;
+    }
+
+    .container {
+        width:80%;
+        margin: 0 auto;
+        padding: 2rem 1rem;
+    }
+
+    /* Header Section */
+    .page-header {
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--gray-900);
+        letter-spacing: -0.025em;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .page-header h1 i {
+        color: var(--primary-600);
+        font-size: 1.875rem;
+    }
+
+    .page-header .subtitle {
+        color: var(--gray-500);
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    /* Navigation Bar */
+    .nav-bar {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: 1rem 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-md);
+        border: 1px solid var(--primary-100);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 1rem;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.9);
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.625rem;
+        color: var(--gray-600);
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius-lg);
+        transition: all 0.2s;
+        background: var(--gray-50);
+        border: 1px solid var(--gray-200);
+    }
+
+    .back-link:hover {
+        background: var(--primary-50);
+        color: var(--primary-700);
+        border-color: var(--primary-200);
+        transform: translateX(-2px);
+    }
+
+    .skill-preview {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: var(--primary-50);
+        padding: 0.5rem 1.25rem;
+        border-radius: 2rem;
+        border: 1px solid var(--primary-200);
+    }
+
+    .skill-icon {
+        width: 32px;
+        height: 32px;
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        border-radius: var(--radius-lg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        box-shadow: 0 4px 8px rgba(37, 99, 235, 0.2);
+    }
+
+    .skill-name {
+        font-weight: 600;
+        color: var(--primary-800);
+        font-size: 0.95rem;
+    }
+
+    /* Messages */
+    .messages {
+        margin-bottom: 2rem;
+    }
+
+    .alert {
+        padding: 1rem 1.25rem;
+        border-radius: var(--radius-lg);
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid transparent;
+        animation: slideIn 0.3s ease;
+    }
+
+    .alert i {
+        font-size: 1.25rem;
+    }
+
+    .alert-success {
+        background-color: var(--success-50);
+        color: var(--success-700);
+        border-color: var(--success-100);
+    }
+
+    .alert-error {
+        background-color: var(--error-50);
+        color: var(--error-600);
+        border-color: var(--error-100);
+    }
+
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* Info Card */
+    .info-card {
+        background: linear-gradient(135deg, var(--primary-50), var(--primary-100));
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        border: 1px solid var(--primary-200);
+    }
+
+    .info-card h3 {
+        font-size: 1rem;
+        font-weight: 600;
+        color: var(--primary-800);
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 1rem;
+    }
+
+    .info-item {
+        background: white;
+        padding: 1rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--primary-200);
+    }
+
+    .info-label {
+        color: var(--primary-600);
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        margin-bottom: 0.25rem;
+    }
+
+    .info-value {
+        font-weight: 600;
+        color: var(--primary-900);
+        font-size: 1.125rem;
+    }
+
+    /* Form Card */
+    .form-card {
+        background: white;
+        border-radius: var(--radius-xl);
+        padding: 2.5rem;
+        box-shadow: var(--shadow-xl);
+        border: 1px solid var(--primary-100);
+        margin-bottom: 2rem;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+        background: rgba(255, 255, 255, 0.95);
+    }
+
+    .form-card:hover {
+        box-shadow: 0 25px 50px -12px rgba(37, 99, 235, 0.25);
+        border-color: var(--primary-200);
+    }
+
+    .form-card h2 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        color: var(--gray-800);
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-100);
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .form-card h2 i {
+        color: var(--primary-600);
+        font-size: 1.25rem;
+        padding: 0.5rem;
+        background: var(--primary-50);
+        border-radius: var(--radius-lg);
+    }
+
+    /* Form Fields */
+    .form-group {
+        margin-bottom: 1.75rem;
+    }
+
+    .form-group:last-of-type {
+        margin-bottom: 0;
+    }
+
+    label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        margin-bottom: 0.625rem;
+        color: var(--gray-700);
+        font-size: 0.95rem;
+    }
+
+    label i {
+        color: var(--primary-500);
+        font-size: 0.875rem;
+        width: 1.25rem;
+    }
+
+    .required-star {
+        color: var(--error-500);
+        margin-left: 0.25rem;
+        font-size: 1rem;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 0.875rem 1.125rem;
+        border: 2px solid var(--gray-200);
+        border-radius: var(--radius-lg);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        color: var(--gray-900);
+        background-color: white;
+        transition: all 0.2s;
+    }
+
+    input:hover, select:hover, textarea:hover {
+        border-color: var(--primary-300);
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: var(--primary-500);
+        box-shadow: 0 0 0 4px var(--primary-100);
+    }
+
+    textarea {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    select {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%236b7280'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+        background-position: right 1rem center;
+        background-repeat: no-repeat;
+        background-size: 1.25rem;
+        padding-right: 2.75rem;
+    }
+
+    /* Checkbox styling */
+    input[type="checkbox"] {
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-right: 0.5rem;
+        accent-color: var(--primary-600);
+        cursor: pointer;
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        background: var(--gray-50);
+        padding: 0.875rem 1.125rem;
+        border-radius: var(--radius-lg);
+        border: 2px solid var(--gray-200);
+        transition: all 0.2s;
+    }
+
+    .checkbox-group:hover {
+        border-color: var(--primary-300);
+        background: var(--primary-50);
+    }
+
+    .checkbox-group label {
+        margin-bottom: 0;
+        cursor: pointer;
+        flex: 1;
+    }
+
+    /* Help text */
+    .help-text {
+        font-size: 0.85rem;
+        color: var(--gray-500);
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding-left: 0.5rem;
+    }
+
+    .help-text i {
+        color: var(--primary-400);
+        font-size: 0.875rem;
+    }
+
+    /* Error messages */
+    .error {
+        color: var(--error-600);
+        font-size: 0.85rem;
+        margin-top: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        padding-left: 0.5rem;
+    }
+
+    .error i {
+        font-size: 0.875rem;
+    }
+
+    /* Form Actions */
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2.5rem;
+        padding-top: 2rem;
+        border-top: 2px solid var(--gray-100);
+    }
+
+    .btn {
+        padding: 0.875rem 2rem;
+        border-radius: var(--radius-lg);
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.75rem;
+        border: none;
+        cursor: pointer;
+        font-family: 'Inter', sans-serif;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        flex: 1;
+        letter-spacing: 0.025em;
+    }
+
+    .btn i {
+        font-size: 1.1rem;
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, var(--primary-600), var(--primary-700));
+        color: white;
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+
+    .btn-primary:hover {
+        background: linear-gradient(135deg, var(--primary-700), var(--primary-800));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    }
+
+    .btn-secondary {
+        background: white;
+        color: var(--gray-700);
+        border: 2px solid var(--gray-200);
+    }
+
+    .btn-secondary:hover {
+        background: var(--gray-50);
+        border-color: var(--gray-300);
+        transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .footer {
+        text-align: center;
+        margin-top: 2rem;
+        padding: 1.5rem 0 0;
+        color: var(--gray-500);
+        font-size: 0.875rem;
+        border-top: 1px solid var(--primary-100);
+    }
+
+    .footer i {
+        color: var(--primary-400);
+        margin: 0 0.25rem;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+        width: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: var(--gray-100);
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(135deg, var(--primary-400), var(--primary-600));
+        border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(135deg, var(--primary-500), var(--primary-700));
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+        .container {
+            padding: 1rem;
+        }
+
+        .form-card {
+            padding: 1.5rem;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+        }
+
+        .nav-bar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .skill-preview {
+            width: 100%;
+            justify-content: center;
+        }
+
+        .page-header h1 {
+            font-size: 1.75rem;
+        }
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    /* Print styles */
+    @media print {
+        .btn, .footer, .nav-bar {
+            display: none;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <div class="nav-links">
+            <a href="{% url 'view_skill' skill.id %}" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Back to Skill
+            </a>
+        </div>
+        <div class="skill-preview">
+            <div class="skill-icon">{{ skill.title|first|upper }}</div>
+            <span class="skill-name">{{ skill.title }}</span>
+        </div>
+    </div>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>
+            <i class="fas fa-edit"></i>
+            Edit Skill
+        </h1>
+        <div class="subtitle">
+            <i class="fas fa-info-circle"></i>
+            Update your skill information below
+        </div>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{% if message.tags %}{{ message.tags }}{% else %}success{% endif %}">
+            <i class="fas fa-{% if message.tags == 'error' %}exclamation-circle{% else %}check-circle{% endif %}"></i>
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Statistics Info Card -->
+    <div class="info-card">
+        <h3>
+            <i class="fas fa-chart-line"></i>
+            Current Statistics
+        </h3>
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="info-label">Created</div>
+                <div class="info-value">{{ skill.created_at|date:"M d, Y" }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Goals</div>
+                <div class="info-value">{{ skill.goals.count }}</div>
+            </div>
+            <div class="info-item">
+                <div class="info-label">Status</div>
+                <div class="info-value">
+                    {% if skill.is_active %}
+                        <span style="color: var(--success-600);">Active</span>
+                    {% else %}
+                        <span style="color: var(--gray-500);">Inactive</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form Card -->
+    <div class="form-card">
+        <h2>
+            <i class="fas fa-cog"></i>
+            Skill Details
+        </h2>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">
+                    <i class="fas fa-{% if field.name == 'title' %}tag{% elif field.name == 'description' %}align-left{% elif field.name == 'proficiency_level' %}signal{% elif field.name == 'is_active' %}power-off{% else %}circle{% endif %}"></i>
+                    {{ field.label }}
+                    {% if field.field.required %}
+                        <span class="required-star">*</span>
+                    {% endif %}
+                </label>
+                
+                {% if field.name == 'is_active' %}
+                    <div class="checkbox-group">
+                        {{ field }}
+                        <label for="{{ field.id_for_label }}" style="margin-bottom: 0;">
+                            {{ field.help_text|default:"Mark as active" }}
+                        </label>
+                    </div>
+                {% else %}
+                    {{ field }}
+                {% endif %}
+                
+                {% if field.help_text and field.name != 'is_active' %}
+                    <div class="help-text">
+                        <i class="fas fa-info-circle"></i>
+                        {{ field.help_text }}
+                    </div>
+                {% endif %}
+                
+                {% if field.errors %}
+                    <div class="error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {% for error in field.errors %}
+                            {{ error }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i>
+                    Save Changes
+                </button>
+                <a href="{% url 'view_skill' skill.id %}" class="btn btn-secondary">
+                    <i class="fas fa-times"></i>
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+
+{% endblock %}

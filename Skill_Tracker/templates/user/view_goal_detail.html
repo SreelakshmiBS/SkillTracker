@@ -1,0 +1,408 @@
+{% extends "base2.html" %}
+{% load static %}
+
+{% block extra_css %}
+<style>
+    :root {
+        --blue-primary: #0066FF;
+        --blue-deep: #003D99;
+        --blue-medium: #3385FF;
+        --blue-light: #6BA3FF;
+        --blue-sky: #A3C9FF;
+        --blue-pale: #E6F0FF;
+        --blue-dark: #001F4D;
+        --neutral-white: #FFFFFF;
+        --neutral-light: #F8FAFB;
+        --neutral-gray: #64748B;
+        --shadow-soft: rgba(0, 61, 153, 0.08);
+        --success-green: #10B981;
+        --warning-orange: #F59E0B;
+        --error-red: #EF4444;
+        --purple: #8B5CF6;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Outfit', sans-serif;
+        background: linear-gradient(135deg, var(--blue-pale), var(--neutral-light));
+        color: var(--blue-dark);
+        min-height: 100vh;
+    }
+
+    .goal-container {
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 20px;
+    }
+
+    /* Header Styles */
+    .goal-header {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 10px 30px var(--shadow-soft);
+        border: 1px solid var(--blue-sky);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 1rem;
+    }
+
+    .goal-header h2 {
+        font-size: 2rem;
+        color: var(--blue-dark);
+        margin: 0;
+        background: linear-gradient(135deg, var(--blue-primary), var(--blue-deep));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+    }
+
+    .skill-badge {
+        padding: 8px 20px;
+        background: var(--blue-pale);
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1rem;
+        color: var(--blue-primary);
+        border: 1px solid var(--blue-sky);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .skill-badge::before {
+        font-size: 1.1rem;
+    }
+
+    /* Goal Card Styles */
+    .goal-card {
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px var(--shadow-soft);
+        border: 1px solid var(--blue-sky);
+        margin-bottom: 2rem;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    .goal-detail {
+        background: var(--blue-pale);
+        padding: 1.5rem;
+        border-radius: 16px;
+        border: 1px solid var(--blue-sky);
+        transition: transform 0.3s ease;
+    }
+
+    .goal-detail:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px var(--shadow-soft);
+    }
+
+    .goal-detail strong {
+        display: block;
+        color: var(--neutral-gray);
+        font-size: 0.9rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.8rem;
+    }
+
+    .goal-detail p {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--blue-dark);
+        line-height: 1.6;
+        margin: 0;
+    }
+
+    /* Status Styles */
+    .status {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 1rem;
+    }
+
+    .status.completed {
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--success-green);
+        border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    .status.completed::before {
+        content: "✓ ";
+        font-weight: bold;
+    }
+
+    .status.pending {
+        background: rgba(245, 158, 11, 0.1);
+        color: var(--warning-orange);
+        border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .status.pending::before {
+        font-weight: bold;
+    }
+
+    /* Action Buttons */
+    .goal-actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        background: white;
+        border-radius: 20px;
+        padding: 2rem;
+        box-shadow: 0 10px 30px var(--shadow-soft);
+        border: 1px solid var(--blue-sky);
+    }
+
+    .btn-primary,
+    .btn-danger,
+    .btn-secondary {
+        padding: 12px 28px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: var(--blue-primary);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--blue-deep);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 102, 255, 0.3);
+    }
+
+    .btn-primary::before {
+        font-size: 1.1rem;
+    }
+
+    .btn-danger {
+        background: var(--error-red);
+        color: white;
+    }
+
+    .btn-danger:hover {
+        background: #dc2626;
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger::before {
+        font-size: 1.1rem;
+    }
+
+    .btn-secondary {
+        background: var(--neutral-light);
+        color: var(--blue-dark);
+        border: 1px solid var(--blue-sky);
+    }
+
+    .btn-secondary:hover {
+        background: var(--blue-pale);
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px var(--shadow-soft);
+    }
+
+    .btn-secondary::before {
+        font-size: 1.2rem;
+    }
+
+    /* Empty State */
+    .goal-description-empty {
+        color: var(--neutral-gray) !important;
+        font-style: italic;
+        font-weight: normal !important;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .goal-container {
+            margin: 1rem auto;
+        }
+
+        .goal-header {
+            flex-direction: column;
+            align-items: flex-start;
+            text-align: left;
+            padding: 1.5rem;
+        }
+
+        .goal-header h2 {
+            font-size: 1.8rem;
+        }
+
+        .goal-card {
+            grid-template-columns: 1fr;
+            padding: 1.5rem;
+        }
+
+        .goal-actions {
+            flex-direction: column;
+            padding: 1.5rem;
+        }
+
+        .btn-primary,
+        .btn-danger,
+        .btn-secondary {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+
+    /* Animation */
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .goal-header,
+    .goal-card,
+    .goal-actions {
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .goal-detail:nth-child(1) { animation-delay: 0.1s; }
+    .goal-detail:nth-child(2) { animation-delay: 0.2s; }
+    .goal-detail:nth-child(3) { animation-delay: 0.3s; }
+    .goal-detail:nth-child(4) { animation-delay: 0.4s; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="goal-container">
+
+    <!-- Header -->
+    <div class="goal-header">
+        <h2>{{ goal.title }}</h2>
+        <span class="skill-badge">
+        {{ skill.title }}
+        </span>
+    </div>
+
+    <!-- Goal Info Card -->
+    <div class="goal-card">
+
+        <div class="goal-detail">
+            <strong>Description</strong>
+            {% if goal.description %}
+                <p>{{ goal.description|linebreaksbr }}</p>
+            {% else %}
+                <p class="goal-description-empty">No description provided for this goal.</p>
+            {% endif %}
+        </div>
+
+        <div class="goal-detail">
+            <strong>Status</strong>
+            {% if goal.is_completed %}
+                <span class="status completed">Completed</span>
+            {% else %}
+                <span class="status pending">In Progress</span>
+            {% endif %}
+        </div>
+
+        <div class="goal-detail">
+            <strong>Target Date</strong>
+            {% if goal.target_date %}
+                <p>{{ goal.target_date|date:"F d, Y" }}</p>
+            {% else %}
+                <p class="goal-description-empty">No target date set</p>
+            {% endif %}
+        </div>
+
+        <div class="goal-detail">
+            <strong>Created On</strong>
+            <p>{{ goal.created_at|date:"F d, Y" }}</p>
+        </div>
+
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="goal-actions">
+
+        <a href="{% url 'edit_goal' goal.id %}" 
+           class="btn-primary">
+            Edit Goal
+        </a>
+        <a href="{% url 'add_skill_progress' skill.id %}" 
+           class="btn-primary">
+            Add Progress
+        </a>
+        <a href="{% url 'view_goals' %}" 
+           class="btn-primary">
+            View all goals
+        </a>
+        {% if not goal.is_completed %}
+<form method="post" action="{% url 'mark_goal_completed' goal.id %}">
+    {% csrf_token %}
+    <button type="submit" class="btn-primary" style="background: var(--success-green);">
+        ✓ Mark as Completed
+    </button>
+</form>
+{% else %}
+    <span class="status completed" style="font-size: 1rem;">
+        Goal Already Completed 
+    </span>
+{% endif %}
+
+
+
+        <a href="{% url 'delete_goal' goal.id %}" 
+           class="btn-danger" 
+           onclick="return confirm('Are you sure you want to delete this goal? This action cannot be undone.')">
+            Delete Goal
+        </a>
+
+        <a href="{% url 'view_skill' skill.id %}" 
+           class="btn-secondary">
+            Back to Skill
+        </a>
+        
+
+
+    </div>
+
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Add hover effects or additional interactions if needed
+        console.log('Goal detail page loaded');
+        
+        // You could add a completion toggle feature here
+        const statusElement = document.querySelector('.status');
+        if (statusElement && statusElement.classList.contains('pending')) {
+            // Optional: Add quick complete functionality
+            // This is just a placeholder for future enhancements
+        }
+    });
+</script>
+{% endblock %}

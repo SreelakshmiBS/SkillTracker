@@ -1,0 +1,779 @@
+{% extends "base2.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    /* =====================================================
+       1. THEME VARIABLES
+    ===================================================== */
+    :root {
+        --primary: #2563eb;
+        --primary-light: #dbeafe;
+        --primary-dark: #1d4ed8;
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --success-dark: #059669;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        
+        --bg: #f8fafc;
+        --white: #ffffff;
+        --text: #1e293b;
+        --text-light: #64748b;
+        --text-muted: #94a3b8;
+        --border: #e2e8f0;
+        --border-light: #f1f5f9;
+        
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-primary: 0 10px 15px -3px rgba(37, 99, 235, 0.2);
+        
+        --radius-sm: 0.375rem;
+        --radius: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --radius-2xl: 1.5rem;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    .progress-tracker-container {
+        max-width: 1400px;
+        margin: 2rem auto;
+        padding: 0 2rem;
+    }
+
+    /* =====================================================
+       2. HEADER
+    ===================================================== */
+    .tracker-header {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: var(--radius-2xl);
+        padding: 2rem;
+        color: white;
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: var(--shadow-primary);
+    }
+
+    .header-content h2 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .add-progress-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.875rem 2rem;
+        background: white;
+        color: var(--primary);
+        text-decoration: none;
+        border-radius: 50px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: var(--shadow);
+    }
+
+    .add-progress-btn:hover {
+        background: var(--primary-light);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    /* =====================================================
+       3. FILTER SECTION
+    ===================================================== */
+    .filter-section {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        margin-bottom: 2rem;
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .filter-label {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--text);
+        min-width: 60px;
+    }
+
+    .filter-label i {
+        color: var(--primary);
+    }
+
+    .filter-select {
+        padding: 0.75rem 2rem 0.75rem 1rem;
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        font-family: 'Inter', sans-serif;
+        font-size: 0.9rem;
+        color: var(--text);
+        background: var(--white);
+        min-width: 180px;
+        cursor: pointer;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 0.75rem center;
+        background-size: 16px;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary);
+    }
+
+    /* =====================================================
+       4. SKILL NAMES STRIP
+    ===================================================== */
+    .skill-names-strip {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 1rem 1.5rem;
+        border: 1px solid var(--border);
+        margin-bottom: 2rem;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .skill-names-title {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-weight: 600;
+        color: var(--text);
+        padding-right: 1rem;
+        border-right: 2px solid var(--border-light);
+    }
+
+    .skill-names-title i {
+        color: var(--primary);
+    }
+
+    .skill-names-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+        flex: 1;
+    }
+
+    .skill-name-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.2rem;
+        background: var(--bg);
+        color: var(--text);
+        border-radius: 40px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        border: 1px solid var(--border);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    .skill-name-tag:hover {
+        background: var(--primary-light);
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .skill-name-tag.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+
+    .skill-name-tag i {
+        font-size: 0.8rem;
+        color: var(--primary);
+    }
+
+    .skill-name-tag.active i {
+        color: white;
+    }
+
+    .skill-name-tag .completed-icon {
+        color: var(--success);
+    }
+
+    .skill-name-tag.active .completed-icon {
+        color: white;
+    }
+
+    /* =====================================================
+       5. MAIN CONTENT AREA
+    ===================================================== */
+    .tracker-main {
+        background: var(--white);
+        border-radius: var(--radius-2xl);
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        overflow-x: auto;
+    }
+
+    .progress-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        min-width: 1000px;
+    }
+
+    .progress-table th {
+        text-align: left;
+        padding: 1.25rem 1rem;
+        background: var(--bg);
+        color: var(--text);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid var(--border);
+    }
+
+    .progress-table td {
+        padding: 1.25rem 1rem;
+        border-bottom: 1px solid var(--border-light);
+        vertical-align: middle;
+    }
+
+    .progress-table tbody tr {
+        transition: all 0.3s ease;
+    }
+
+    .progress-table tbody tr:hover {
+        background: var(--bg);
+    }
+
+    /* Date Cell */
+    .date-cell {
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .status-indicator {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        margin-right: 8px;
+    }
+
+    .status-completed {
+        background: var(--success);
+        box-shadow: 0 0 0 2px var(--success-light);
+    }
+
+    .status-pending {
+        background: var(--warning);
+        box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+    }
+
+    /* Time Cells */
+    .planned-time {
+        color: var(--warning);
+        font-weight: 600;
+    }
+
+    .actual-time {
+        color: var(--success);
+        font-weight: 600;
+    }
+
+    /* Checkbox Styling */
+    .checkbox-cell {
+        text-align: center;
+    }
+
+    .styled-checkbox {
+        width: 22px;
+        height: 22px;
+        border: 2px solid var(--border);
+        border-radius: var(--radius-sm);
+        appearance: none;
+        cursor: default;
+        position: relative;
+        background: var(--white);
+        margin: 0 auto;
+        display: block;
+    }
+
+    .styled-checkbox:checked {
+        background-color: var(--success);
+        border-color: var(--success);
+    }
+
+    .styled-checkbox:checked::after {
+        content: '✓';
+        color: white;
+        font-size: 14px;
+        font-weight: bold;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 0.5rem;
+        align-items: center;
+    }
+
+    .action-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        border-radius: var(--radius);
+        text-decoration: none;
+        transition: all 0.3s ease;
+        font-size: 1rem;
+    }
+
+    .edit-btn {
+        background: var(--primary-light);
+        color: var(--primary);
+    }
+
+    .edit-btn:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .delete-btn {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+    }
+
+    .delete-btn:hover {
+        background: var(--danger);
+        color: white;
+    }
+
+    .action-separator {
+        color: var(--border);
+        font-weight: 300;
+    }
+
+    /* Time Comparison Badge */
+    .time-comparison {
+        display: inline-block;
+        padding: 0.15rem 0.5rem;
+        border-radius: 30px;
+        font-size: 0.65rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+    }
+
+    .time-efficiency-good {
+        background: var(--success-light);
+        color: var(--success-dark);
+    }
+
+    .time-efficiency-poor {
+        background: rgba(239, 68, 68, 0.1);
+        color: var(--danger);
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 4rem 2rem;
+    }
+
+    .empty-state-icon {
+        font-size: 4rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-muted);
+    }
+
+    .empty-state p {
+        font-size: 1.1rem;
+        color: var(--text-light);
+        margin-bottom: 2rem;
+    }
+
+    /* Quick Stats Strip */
+    .quick-stats-strip {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1rem;
+        margin-bottom: 2rem;
+    }
+
+    .quick-stat-item {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 1rem;
+        text-align: center;
+        border: 1px solid var(--border);
+    }
+
+    .quick-stat-value {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary);
+        display: block;
+    }
+
+    .quick-stat-label {
+        font-size: 0.8rem;
+        color: var(--text-light);
+    }
+
+    /* =====================================================
+       6. RESPONSIVE
+    ===================================================== */
+    @media (max-width: 768px) {
+        .tracker-header {
+            flex-direction: column;
+            text-align: center;
+            gap: 1rem;
+            padding: 1.5rem;
+        }
+        
+        .header-content h2 {
+            font-size: 1.5rem;
+        }
+        
+        .add-progress-btn {
+            width: 100%;
+            justify-content: center;
+        }
+        
+        .filter-section {
+            flex-direction: column;
+            align-items: stretch;
+        }
+        
+        .filter-select {
+            width: 100%;
+        }
+        
+        .skill-names-strip {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .skill-names-title {
+            border-right: none;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 0.5rem;
+            width: 100%;
+        }
+        
+        .action-buttons {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .action-separator {
+            display: none;
+        }
+
+        .quick-stats-strip {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="progress-tracker-container">
+    <!-- Header -->
+
+    <!-- Quick Stats Strip -->
+    {% if progress_list %}
+    <div class="quick-stats-strip">
+        <div class="quick-stat-item">
+            <span class="quick-stat-value">{{ progress_list|length }}</span>
+            <span class="quick-stat-label">Total Entries</span>
+        </div>
+        <div class="quick-stat-item">
+            <span class="quick-stat-value">{{ total_hours|default:"0" }}h</span>
+            <span class="quick-stat-label">Hours Logged</span>
+        </div>
+        <div class="quick-stat-item">
+            <span class="quick-stat-value">{{ skills.count }}</span>
+            <span class="quick-stat-label">Active Skills</span>
+        </div>
+        <div class="quick-stat-item">
+            <span class="quick-stat-value">{{ notes.count|default:"0" }}</span>
+            <span class="quick-stat-label">Notes</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Skill Names Strip -->
+    {% if skills %}
+    <div class="skill-names-strip">
+        <div class="skill-names-title">
+            <i class="fas fa-code"></i>
+            <span>Skills:</span>
+        </div>
+        <div class="skill-names-list">
+        
+            
+            <!-- Individual Skill Tags -->
+            {% for skill in skills %}
+            <span class="skill-name-tag" onclick="filterBySkill('{{ skill.id }}')" data-skill-id="{{ skill.id }}">
+                {% if skill.is_completed %}
+                <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                {% else %}
+                <i class="fas fa-tag"></i>
+                {% endif %}
+                {{ skill.title }}
+            </span>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Filter Section -->
+    {% if progress_list %}
+    <div class="filter-section">
+        <div class="filter-label">
+            <i class="fas fa-filter"></i>
+            <span>Filters:</span>
+        </div>
+        <select class="filter-select" id="filter-date">
+            <option value="">All Dates</option>
+            <option value="today">Today</option>
+            <option value="week">This Week</option>
+            <option value="month">This Month</option>
+        </select>
+        <select class="filter-select" id="filter-status">
+            <option value="">All Status</option>
+            <option value="completed">Completed</option>
+            <option value="pending">Pending</option>
+        </select>
+    </div>
+    {% endif %}
+
+    <!-- Main Content Area -->
+    <div class="tracker-main">
+        {% if progress_list %}
+        <table class="progress-table">
+            <thead>
+                <tr>
+                    <th><i class="far fa-calendar-alt"></i> Date</th>
+                    <th><i class="fas fa-code"></i> Skill</th>
+                    <th><i class="fas fa-clock"></i> Planned</th>
+                    <th><i class="fas fa-hourglass-end"></i> Actual</th>
+                    <th><i class="fas fa-project-diagram"></i> Project</th>
+                    <th><i class="fas fa-certificate"></i> Certificate</th>
+                    <th><i class="fas fa-sticky-note"></i> Notes</th>
+                    <th><i class="fas fa-check-circle"></i> Completed</th>
+                    <th><i class="fas fa-cog"></i> Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in progress_list %}
+                <tr data-skill="{{ p.skill.id }}" data-date="{{ p.date|date:'Y-m-d' }}" data-status="{% if p.is_completed %}completed{% else %}pending{% endif %}">
+                    <td class="date-cell">
+                        <span class="status-indicator {% if p.is_completed %}status-completed{% else %}status-pending{% endif %}"></span>
+                        {{ p.date|date:"M d, Y" }}
+                    </td>
+                    <td>
+                        <span class="skill-name-tag" style="padding: 0.25rem 1rem; font-size: 0.8rem; cursor: default; background: var(--primary-light); color: var(--primary-dark);">
+                            {{ p.skill.title }}
+                        </span>
+                    </td>
+                    <td class="planned-time">{{ p.planned_time }}h</td>
+                    <td class="actual-time">
+                        {{ p.actual_time }}h
+                        {% if p.planned_time and p.actual_time %}
+                            {% if p.actual_time >= p.planned_time %}
+                                <span class="time-comparison time-efficiency-good">
+                                    <i class="fas fa-check"></i>
+                                </span>
+                            {% else %}
+                                <span class="time-comparison time-efficiency-poor">
+                                    <i class="fas fa-exclamation"></i>
+                                </span>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" class="styled-checkbox" {% if p.project_done %}checked{% endif %} disabled>
+                    </td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" class="styled-checkbox" {% if p.certification_done %}checked{% endif %} disabled>
+                    </td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" class="styled-checkbox" {% if p.topic_notes %}checked{% endif %} disabled>
+                    </td>
+                    <td class="checkbox-cell">
+                        <input type="checkbox" class="styled-checkbox" {% if p.is_completed %}checked{% endif %} disabled>
+                    </td>
+                    <td class="action-cell">
+                        <div class="action-buttons">
+                            <a href="{% url 'edit_skill_progress' p.id %}" class="action-btn edit-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <span class="action-separator">|</span>
+                            <a href="{% url 'delete_skill_progress' p.id %}" class="action-btn delete-btn" title="Delete" onclick="return confirm('Are you sure you want to delete this progress entry?')">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <!-- Empty State -->
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-chart-line"></i>
+            </div>
+            <p>No progress entries yet. Start tracking your learning journey!</p>
+            {% if skills %}
+           
+            <a href="{% url 'add_skill' %}" class="add-progress-btn" style="display: inline-flex;">
+                <i class="fas fa-plus-circle"></i>
+                Create Your First Skill
+            </a>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Filter functionality
+        const filterDate = document.getElementById('filter-date');
+        const filterStatus = document.getElementById('filter-status');
+        const tableRows = document.querySelectorAll('.progress-table tbody tr');
+        const skillTags = document.querySelectorAll('.skill-name-tag[data-skill-id]');
+        let currentSkillFilter = '';
+        
+        function applyFilters() {
+            const dateValue = filterDate ? filterDate.value : '';
+            const statusValue = filterStatus ? filterStatus.value : '';
+            
+            tableRows.forEach(row => {
+                let showRow = true;
+                
+                // Filter by skill (from clicked tag)
+                if (currentSkillFilter && currentSkillFilter !== 'all' && row.dataset.skill !== currentSkillFilter) {
+                    showRow = false;
+                }
+                
+                // Filter by date
+                if (dateValue && showRow) {
+                    const rowDate = new Date(row.dataset.date);
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0);
+                    
+                    if (dateValue === 'today') {
+                        const rowDateStr = rowDate.toDateString();
+                        const todayStr = today.toDateString();
+                        if (rowDateStr !== todayStr) showRow = false;
+                    } else if (dateValue === 'week') {
+                        const oneWeekAgo = new Date(today);
+                        oneWeekAgo.setDate(today.getDate() - 7);
+                        if (rowDate < oneWeekAgo) showRow = false;
+                    } else if (dateValue === 'month') {
+                        const oneMonthAgo = new Date(today);
+                        oneMonthAgo.setMonth(today.getMonth() - 1);
+                        if (rowDate < oneMonthAgo) showRow = false;
+                    }
+                }
+                
+                // Filter by status
+                if (statusValue && showRow) {
+                    showRow = row.dataset.status === statusValue;
+                }
+                
+                row.style.display = showRow ? '' : 'none';
+            });
+        }
+        
+        // Filter by skill when tag is clicked
+        window.filterBySkill = function(skillId) {
+            currentSkillFilter = skillId;
+            
+            // Update active state in skill tags
+            skillTags.forEach(tag => {
+                tag.classList.remove('active');
+            });
+            
+            // Find and activate the clicked tag
+            if (skillId === '') {
+                // "All" tag
+                document.querySelector('.skill-name-tag[data-skill-id="all"]').classList.add('active');
+            } else {
+                // Find tag with matching skill ID
+                skillTags.forEach(tag => {
+                    if (tag.dataset.skillId === skillId) {
+                        tag.classList.add('active');
+                    }
+                });
+            }
+            
+            applyFilters();
+        };
+        
+        // Add event listeners to filters
+        if (filterDate) filterDate.addEventListener('change', applyFilters);
+        if (filterStatus) filterStatus.addEventListener('change', applyFilters);
+        
+        // Sort table by date (newest first)
+        const tbody = document.querySelector('.progress-table tbody');
+        if (tbody) {
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            rows.sort((a, b) => {
+                const dateA = new Date(a.dataset.date);
+                const dateB = new Date(b.dataset.date);
+                return dateB - dateA;
+            });
+            rows.forEach(row => tbody.appendChild(row));
+        }
+        
+        // Initialize with "All" active
+        const allTag = document.querySelector('.skill-name-tag[data-skill-id="all"]');
+        if (allTag) {
+            allTag.classList.add('active');
+        }
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends 'base2.html' %}
+
+{% block title %}Add Skill Goal | SkillBloom{% endblock %}
+
+{% block extra_css %}
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --blue-primary: #0066FF;
+        --blue-deep: #003D99;
+        --blue-medium: #3385FF;
+        --blue-light: #6BA3FF;
+        --blue-pale: #E6F0FF;
+        --neutral-white: #FFFFFF;
+        --neutral-light: #F8FAFB;
+        --neutral-gray: #64748B;
+        --shadow-soft: rgba(0, 61, 153, 0.08);
+    }
+
+    .goal-page {
+        min-height: 100vh;
+        background: linear-gradient(180deg, var(--blue-pale), var(--neutral-light));
+        padding: 80px 15px;
+    }
+
+    .goal-wrapper {
+        max-width: 820px;
+        margin: auto;
+        background: var(--neutral-white);
+        padding: 40px;
+        border-radius: 18px;
+        box-shadow: 0 20px 40px var(--shadow-soft);
+    }
+
+    h2 {
+        font-family: 'Fraunces', serif;
+        font-size: 32px;
+        color: var(--blue-deep);
+        margin-bottom: 8px;
+    }
+
+    .subtitle {
+        color: var(--neutral-gray);
+        margin-bottom: 30px;
+        font-size: 15px;
+    }
+
+    label {
+        font-weight: 600;
+        color: var(--blue-deep);
+        display: block;
+        margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #DCE6FF;
+        font-size: 14px;
+        background: var(--neutral-light);
+        font-family: 'Outfit', sans-serif;
+        margin-bottom: 20px;
+    }
+
+    input:focus, select:focus, textarea:focus {
+        outline: none;
+        border-color: var(--blue-primary);
+        background: #fff;
+        box-shadow: 0 0 0 3px rgba(0,102,255,0.1);
+    }
+
+    textarea {
+        resize: vertical;
+        min-height: 90px;
+    }
+
+    .error {
+        color: #dc2626;
+        font-size: 13px;
+        margin-top: -14px;
+        margin-bottom: 14px;
+    }
+
+    .file-note {
+        font-size: 13px;
+        color: var(--neutral-gray);
+        margin-top: -10px;
+        margin-bottom: 20px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: linear-gradient(135deg, var(--blue-primary), var(--blue-medium));
+        color: #fff;
+        padding: 14px;
+        font-size: 16px;
+        border-radius: 12px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 12px 24px rgba(0,102,255,0.25);
+        transition: 0.2s ease;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 16px 32px rgba(0,102,255,0.35);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="goal-page">
+    <div class="goal-wrapper">
+
+        <h2>Add Skill Goal</h2>
+        <p class="subtitle">
+            Define your learning goal, daily effort, and roadmap to success
+        </p>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <label>{{ field.label }}</label>
+                {{ field }}
+
+                {% if field.errors %}
+                    <div class="error">{{ field.errors|striptags }}</div>
+                {% endif %}
+            {% endfor %}
+
+            <p class="file-note">
+                Upload a roadmap or study plan (PDF, image, or document)
+            </p>
+
+            <button type="submit" class="btn-primary">
+                Save Goal
+            </button>
+        </form>
+
+    </div>
+</div>
+{% endblock %}

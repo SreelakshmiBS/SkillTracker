@@ -1,0 +1,14 @@
+<h2>Goal Completed 🎉</h2>
+
+<p>You completed the goal for <strong>{{ skill.title }}</strong></p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" name="action" value="complete">
+        ✅ Complete Skill
+    </button>
+
+    <button type="submit" name="action" value="continue">
+        🔵 Continue Learning
+    </button>
+</form>

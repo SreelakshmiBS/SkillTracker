@@ -1,0 +1,814 @@
+{% extends 'base2.html' %}
+{% load static %}
+
+{% block title %}Add New Skill - SkillTrack{% endblock %}
+
+{% block extra_css %}
+<style>
+/* CSS Variables */
+:root {
+    --blue-primary: #0066FF;
+    --blue-deep: #003D99;
+    --blue-medium: #3385FF;
+    --blue-light: #6BA3FF;
+    --blue-sky: #A3C9FF;
+    --blue-pale: #E6F0FF;
+    --blue-dark: #001F4D;
+    --neutral-white: #FFFFFF;
+    --neutral-light: #F8FAFB;
+    --neutral-gray: #64748B;
+    --border-gray: #CBD5E1;
+    --shadow-soft: rgba(0, 61, 153, 0.08);
+    --shadow-medium: rgba(0, 61, 153, 0.12);
+    --shadow-heavy: rgba(0, 61, 153, 0.15);
+    --radius-sm: 8px;
+    --radius-md: 10px;
+    --radius-lg: 14px;
+    --radius-xl: 18px;
+    --error-red: #EF4444;
+    --error-light: #FEF2F2;
+    --success-green: #10B981;
+    --success-light: #ECFDF5;
+}
+
+/* Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    background: var(--neutral-light);
+    color: var(--blue-dark);
+    line-height: 1.5;
+    min-height: 100vh;
+}
+
+/* Form Container */
+.form-container {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--blue-pale) 0%, var(--neutral-light) 100%);
+}
+
+/* Form Card */
+.form-card {
+    background: var(--neutral-white);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 10px 30px var(--shadow-medium);
+    width: 100%;
+    max-width: 800px;
+    overflow: hidden;
+    border: 1px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 15px 40px var(--shadow-heavy);
+}
+
+/* Form Header */
+.form-header {
+    background: var(--blue-primary);
+    color: var(--neutral-white);
+    padding: 28px 32px;
+    position: relative;
+    overflow: hidden;
+}
+
+.form-header::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 200px;
+    height: 200px;
+    background: var(--blue-medium);
+    border-radius: 50%;
+    opacity: 0.2;
+}
+
+.form-header h1 {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 600;
+    position: relative;
+    z-index: 1;
+}
+
+.form-header-icon {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: var(--radius-md);
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.form-header-icon svg {
+    stroke: var(--neutral-white);
+}
+
+/* Form Body */
+.form-body {
+    padding: 40px 32px;
+}
+
+/* Alert Messages */
+.alert {
+    padding: 16px 20px;
+    border-radius: var(--radius-md);
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 500;
+    animation: slideIn 0.3s ease;
+}
+
+.alert-success {
+    background: var(--success-light);
+    color: var(--success-green);
+    border-left: 4px solid var(--success-green);
+}
+
+.alert-error,
+.alert-danger {
+    background: var(--error-light);
+    color: var(--error-red);
+    border-left: 4px solid var(--error-red);
+}
+
+.alert svg {
+    flex-shrink: 0;
+}
+
+/* Form Groups */
+.form-group {
+    margin-bottom: 28px;
+    position: relative;
+}
+
+.form-label {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+    font-weight: 600;
+    color: var(--blue-dark);
+    font-size: 15px;
+}
+
+.form-label svg {
+    stroke: var(--blue-medium);
+    flex-shrink: 0;
+}
+
+/* Form Inputs */
+.form-input,
+.form-select,
+.form-textarea {
+    width: 100%;
+    padding: 16px 20px;
+    border: 2px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    transition: all 0.2s ease;
+    background: var(--neutral-white);
+    color: var(--blue-dark);
+    font-family: inherit;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+    outline: none;
+    border-color: var(--blue-light);
+    box-shadow: 0 0 0 3px var(--shadow-soft);
+}
+
+.form-input:hover,
+.form-select:hover,
+.form-textarea:hover {
+    border-color: var(--blue-medium);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+    color: var(--neutral-gray);
+    opacity: 0.7;
+}
+
+.form-textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+}
+
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230066FF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 20px center;
+    padding-right: 50px;
+    cursor: pointer;
+}
+
+/* Checkbox */
+.form-checkbox {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 32px 0;
+    cursor: pointer;
+    user-select: none;
+}
+
+.form-checkbox input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-gray);
+    border-radius: var(--radius-sm);
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+}
+
+.form-checkbox input[type="checkbox"]:checked {
+    background: var(--blue-primary);
+    border-color: var(--blue-primary);
+}
+
+.form-checkbox input[type="checkbox"]:checked::after {
+    content: '';
+    position: absolute;
+    left: 6px;
+    top: 2px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.form-checkbox input[type="checkbox"]:hover {
+    border-color: var(--blue-medium);
+}
+
+.form-checkbox label {
+    color: var(--blue-dark);
+    font-weight: 500;
+    cursor: pointer;
+}
+
+/* Error Messages */
+.error-message {
+    color: var(--error-red);
+    font-size: 14px;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+.error-message svg {
+    stroke: var(--error-red);
+    flex-shrink: 0;
+}
+
+.form-input.error,
+.form-select.error,
+.form-textarea.error {
+    border-color: var(--error-red);
+}
+
+.form-input.error:focus,
+.form-select.error:focus,
+.form-textarea.error:focus {
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
+}
+
+/* Form Actions */
+.form-actions {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border-gray);
+}
+
+.btn {
+    padding: 14px 28px;
+    border-radius: var(--radius-md);
+    font-size: 15px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    text-decoration: none;
+    flex: 1;
+}
+
+.btn-primary {
+    background: var(--blue-primary);
+    color: var(--neutral-white);
+}
+
+.btn-primary:hover {
+    background: var(--blue-deep);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px var(--shadow-medium);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-secondary {
+    background: var(--neutral-light);
+    color: var(--neutral-gray);
+    border: 2px solid var(--border-gray);
+}
+
+.btn-secondary:hover {
+    background: var(--border-gray);
+    color: var(--blue-dark);
+}
+
+.btn svg {
+    stroke: currentColor;
+    flex-shrink: 0;
+}
+
+/* Loading State */
+.btn.loading {
+    position: relative;
+    color: transparent;
+}
+
+.btn.loading::after {
+    content: '';
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: white;
+    animation: spin 0.8s linear infinite;
+}
+
+/* Animations */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .form-container {
+        padding: 16px;
+        align-items: flex-start;
+        min-height: calc(100vh - 32px);
+    }
+    
+    .form-body {
+        padding: 32px 24px;
+    }
+    
+    .form-header {
+        padding: 24px;
+    }
+    
+    .form-header h1 {
+        font-size: 20px;
+    }
+    
+    .form-header-icon {
+        width: 40px;
+        height: 40px;
+        margin-right: 12px;
+    }
+    
+    .form-actions {
+        flex-direction: column-reverse;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+    }
+    
+    .form-input,
+    .form-select,
+    .form-textarea {
+        padding: 14px 16px;
+    }
+}
+
+/* Focus States for Accessibility */
+.form-input:focus-visible,
+.form-select:focus-visible,
+.form-textarea:focus-visible,
+.btn:focus-visible {
+    outline: 2px solid var(--blue-primary);
+    outline-offset: 2px;
+}
+
+/* Date Input Styling */
+input[type="date"] {
+    position: relative;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    opacity: 0.6;
+    filter: invert(32%) sepia(94%) saturate(1208%) hue-rotate(202deg) brightness(97%) contrast(106%);
+    transition: opacity 0.2s ease;
+    padding-left: 20px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    opacity: 1;
+}
+
+/* Remove number input spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Field Required Indicator */
+.form-label::after {
+    content: '*';
+    color: var(--error-red);
+    margin-left: 4px;
+    font-weight: bold;
+}
+
+.form-label:has(+ :not([required]))::after {
+    content: '';
+    margin: 0;
+}
+
+/* Validation Styles */
+.form-input:valid:not(:placeholder-shown) {
+    border-color: var(--success-green);
+}
+
+.form-input:invalid:not(:placeholder-shown):not(:focus) {
+    border-color: var(--error-red);
+}
+</style>
+
+<!-- Icons SVG -->
+<svg style="display: none;">
+    <symbol id="icon-add-skill" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/>
+    </symbol>
+    <symbol id="icon-check" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M20 6L9 17l-5-5"/>
+    </symbol>
+    <symbol id="icon-error" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+    </symbol>
+    <symbol id="icon-calendar" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+    </symbol>
+    <symbol id="icon-level" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+    </symbol>
+    <symbol id="icon-description" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+    </symbol>
+    <symbol id="icon-title" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+    </symbol>
+    <symbol id="icon-cancel" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+    </symbol>
+    <symbol id="icon-save" viewBox="0 0 24 24">
+        <path stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"/>
+    </symbol>
+</svg>
+{% endblock extra_css %}
+
+{% block content %}
+<div class="form-container">
+    <div class="form-card">
+        <div class="form-header">
+            <h1>
+                <div class="form-header-icon">
+                    <svg width="22" height="22">
+                        <use xlink:href="#icon-add-skill"></use>
+                    </svg>
+                </div>
+                Add New Skill
+            </h1>
+        </div>
+
+        <div class="form-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {% if message.tags == 'success' %}
+                            <svg width="20" height="20">
+                                <use xlink:href="#icon-check"></use>
+                            </svg>
+                        {% else %}
+                            <svg width="20" height="20">
+                                <use xlink:href="#icon-error"></use>
+                            </svg>
+                        {% endif %}
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <!-- IMPORTANT: POST method and CSRF -->
+            <form method="post" id="skillForm" novalidate>
+                {% csrf_token %}
+
+                <!-- Skill Title -->
+                <div class="form-group">
+                    <label class="form-label" for="id_title">
+                        <svg width="18" height="18" style="margin-right: 10px;">
+                            <use xlink:href="#icon-title"></use>
+                        </svg>
+                        Skill Title
+                    </label>
+                    <input type="text" name="title" id="id_title" class="form-input"
+                           placeholder="e.g., Python Programming, UI Design, Data Analysis"
+                           value="{{ form.title.value|default_if_none:'' }}" required maxlength="100">
+                    {% if form.title.errors %}
+                        <div class="error-message">
+                            <svg width="16" height="16"><use xlink:href="#icon-error"></use></svg>
+                            {{ form.title.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label class="form-label" for="id_description">
+                        <svg width="18" height="18" style="margin-right: 10px;">
+                            <use xlink:href="#icon-description"></use>
+                        </svg>
+                        Description
+                    </label>
+                    <textarea name="description" id="id_description" class="form-textarea"
+                              placeholder="Describe what you'll learn..."
+                              rows="4">{{ form.description.value|default_if_none:'' }}</textarea>
+                    {% if form.description.errors %}
+                        <div class="error-message">
+                            <svg width="16" height="16"><use xlink:href="#icon-error"></use></svg>
+                            {{ form.description.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Proficiency Level -->
+                <div class="form-group">
+                    <label class="form-label" for="id_proficiency_level">
+                        <svg width="18" height="18" style="margin-right: 10px;">
+                            <use xlink:href="#icon-level"></use>
+                        </svg>
+                        Proficiency Level
+                    </label>
+                    <select name="proficiency_level" id="id_proficiency_level" class="form-select" required>
+                        <option value="">Select a level</option>
+                        <option value="beginner" {% if form.proficiency_level.value == 'beginner' %}selected{% endif %}>Beginner</option>
+                        <option value="intermediate" {% if form.proficiency_level.value == 'intermediate' %}selected{% endif %}>Intermediate</option>
+                        <option value="advanced" {% if form.proficiency_level.value == 'advanced' %}selected{% endif %}>Advanced</option>
+                        <option value="expert" {% if form.proficiency_level.value == 'expert' %}selected{% endif %}>Expert</option>
+                    </select>
+                    {% if form.proficiency_level.errors %}
+                        <div class="error-message">
+                            <svg width="16" height="16"><use xlink:href="#icon-error"></use></svg>
+                            {{ form.proficiency_level.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Last Practiced -->
+                <div class="form-group">
+                    <label class="form-label" for="id_last_practiced">
+                        <svg width="18" height="18" style="margin-right: 10px;">
+                            <use xlink:href="#icon-calendar"></use>
+                        </svg>
+                        Last Practiced
+                    </label>
+                    <input type="date" name="last_practiced" id="id_last_practiced" class="form-input"
+                           value="{{ form.last_practiced.value|default_if_none:'' }}">
+                    {% if form.last_practiced.errors %}
+                        <div class="error-message">
+                            <svg width="16" height="16"><use xlink:href="#icon-error"></use></svg>
+                            {{ form.last_practiced.errors.0 }}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Currently Practicing -->
+                <div class="form-checkbox">
+                    <input type="checkbox" name="is_active" id="id_is_active" {% if form.is_active.value %}checked{% endif %}>
+                    <label for="id_is_active">Currently Practicing This Skill</label>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="form-actions">
+                    <a href="{% url 'user_index' %}" class="btn btn-secondary">
+                        <svg width="18" height="18"><use xlink:href="#icon-cancel"></use></svg>
+                        Cancel
+                    </a>
+
+                    <!-- SUBMIT BUTTON (Important) -->
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <svg width="18" height="18"><use xlink:href="#icon-save"></use></svg>
+                        Set Goal
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('skillForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const today = new Date().toISOString().split('T')[0];
+    
+    // Set max date to today for last_practiced
+    const lastPracticedInput = document.getElementById('id_last_practiced');
+    if (lastPracticedInput) {
+        lastPracticedInput.max = today;
+    }
+    
+    // Real-time validation
+    form.addEventListener('input', function(e) {
+        const target = e.target;
+        if (target.hasAttribute('required') && target.value.trim()) {
+            target.classList.remove('error');
+        }
+    });
+    
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        let isValid = true;
+        const requiredFields = form.querySelectorAll('[required]');
+        
+        requiredFields.forEach(field => {
+            if (!field.value.trim()) {
+                field.classList.add('error');
+                isValid = false;
+                
+                // Scroll to first error
+                if (isValid === false) {
+                    field.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    field.focus();
+                }
+            } else {
+                field.classList.remove('error');
+            }
+        });
+        
+        // Validate date if provided
+        if (lastPracticedInput.value && lastPracticedInput.value > today) {
+            lastPracticedInput.classList.add('error');
+            isValid = false;
+            alert('Last practiced date cannot be in the future');
+            lastPracticedInput.focus();
+        }
+        
+        if (!isValid) {
+            e.preventDefault();
+            // Show error message
+            if (!document.querySelector('.alert-error')) {
+                const errorAlert = document.createElement('div');
+                errorAlert.className = 'alert alert-error';
+                errorAlert.innerHTML = `
+                    <svg width="20" height="20"><use xlink:href="#icon-error"></use></svg>
+                    Please fill in all required fields correctly.
+                `;
+                form.insertBefore(errorAlert, form.firstChild);
+                
+                // Remove error message after 5 seconds
+                setTimeout(() => {
+                    errorAlert.remove();
+                }, 5000);
+            }
+        } else {
+            // Show loading state
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+            
+            // Change button text
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Saving...';
+            
+            // Optional: Add a timeout to reset button if submission takes too long
+            setTimeout(() => {
+                if (submitBtn.classList.contains('loading')) {
+                    submitBtn.classList.remove('loading');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    alert('Submission is taking longer than expected. Please try again.');
+                }
+            }, 10000);
+        }
+    });
+    
+    // Enhanced validation for proficiency level
+    const proficiencySelect = document.getElementById('id_proficiency_level');
+    if (proficiencySelect) {
+        proficiencySelect.addEventListener('change', function() {
+            if (this.value) {
+                this.classList.remove('error');
+            }
+        });
+    }
+    
+    // Auto-format title input
+    const titleInput = document.getElementById('id_title');
+    if (titleInput) {
+        titleInput.addEventListener('blur', function() {
+            if (this.value) {
+                // Capitalize first letter of each word
+                this.value = this.value
+                    .toLowerCase()
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
+            }
+        });
+    }
+    
+    // Character counter for description
+    const descriptionTextarea = document.getElementById('id_description');
+    if (descriptionTextarea) {
+        const charCounter = document.createElement('div');
+        charCounter.className = 'char-counter';
+        charCounter.style.fontSize = '12px';
+        charCounter.style.color = 'var(--neutral-gray)';
+        charCounter.style.textAlign = 'right';
+        charCounter.style.marginTop = '4px';
+        descriptionTextarea.parentNode.insertBefore(charCounter, descriptionTextarea.nextSibling);
+        
+        descriptionTextarea.addEventListener('input', function() {
+            const currentLength = this.value.length;
+            charCounter.textContent = `${currentLength}/1000 characters`;
+            
+            if (currentLength > 900) {
+                charCounter.style.color = 'var(--error-red)';
+            } else if (currentLength > 700) {
+                charCounter.style.color = 'var(--blue-primary)';
+            } else {
+                charCounter.style.color = 'var(--neutral-gray)';
+            }
+        });
+        
+        // Trigger on page load
+        descriptionTextarea.dispatchEvent(new Event('input'));
+    }
+});
+</script>
+{% endblock %}

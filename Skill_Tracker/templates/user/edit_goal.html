@@ -1,0 +1,172 @@
+{% extends "base2.html" %}
+
+{% block extra_css %}
+<style>
+:root {
+    --blue-primary: #0066FF;
+    --blue-deep: #003D99;
+    --blue-medium: #3385FF;
+    --blue-light: #6BA3FF;
+    --blue-sky: #A3C9FF;
+    --blue-pale: #E6F0FF;
+    --blue-dark: #001F4D;
+    --neutral-white: #FFFFFF;
+    --neutral-light: #F8FAFB;
+    --neutral-gray: #64748B;
+    --shadow-soft: rgba(0, 61, 153, 0.08);
+    --shadow-medium: rgba(0, 61, 153, 0.12);
+    --shadow-strong: rgba(0, 61, 153, 0.16);
+}
+
+.container {
+    width:50%;
+    margin: auto;
+    padding: 20px;
+}
+
+.page-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.back-btn {
+    color: var(--neutral-gray);
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.back-btn:hover {
+    color: var(--blue-primary);
+}
+
+h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem;
+    color: var(--blue-dark);
+}
+
+.form-container {
+    background: var(--neutral-white);
+    padding: 40px;
+    border-radius: 16px;
+    box-shadow: 0 10px 30px var(--shadow-soft);
+}
+
+.form-group {
+    margin-bottom: 25px;
+}
+
+label {
+    font-weight: 600;
+    margin-bottom: 8px;
+    display: block;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: 2px solid var(--blue-pale);
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: var(--blue-primary);
+}
+
+.error {
+    color: #EF4444;
+    font-size: 0.85rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-submit {
+    background: linear-gradient(to right, var(--blue-primary), var(--blue-deep));
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    border: none;
+    flex: 1;
+    cursor: pointer;
+}
+
+.btn-cancel {
+    border: 2px solid var(--blue-primary);
+    color: var(--blue-primary);
+    padding: 14px;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    flex: 0.5;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <!-- Header -->
+    <div class="page-header">
+        <button onclick="window.history.back()" class="btn-submit">
+            ← Back to Goal
+        </button>
+        <h1>Edit Goal: {{ goal.skill.title }}</h1>
+    </div>
+
+    <!-- Messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- Form -->
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            {% for field in form %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">
+                    {{ field.label }}
+                    {% if field.field.required %}
+                        <span style="color:red">*</span>
+                    {% endif %}
+                </label>
+
+                {% if field.field.widget.input_type == "checkbox" %}
+                    {{ field }} Mark as completed
+                {% else %}
+                    {{ field }}
+                {% endif %}
+
+                {% if field.errors %}
+                <div class="error">
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="form-actions">
+                <button type="submit" class="btn-submit">Save Changes</button>
+                <a href="{% url 'goal_detail' goal.id %}" class="btn-cancel">Cancel</a>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

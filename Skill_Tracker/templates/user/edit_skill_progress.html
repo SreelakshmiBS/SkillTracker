@@ -1,0 +1,541 @@
+
+<style>
+
+:root {
+    /* Primary Blue Palette */
+    --blue-primary: #0066FF;
+    --blue-deep: #003D99;
+    --blue-medium: #3385FF;
+    --blue-light: #6BA3FF;
+    --blue-sky: #A3C9FF;
+    --blue-pale: #E6F0FF;
+    --blue-dark: #001F4D;
+    
+    /* Neutrals */
+    --neutral-white: #FFFFFF;
+    --neutral-light: #F8FAFB;
+    --neutral-gray: #64748B;
+    
+    /* Semantic Colors */
+    --success-green: #10B981;
+    --warning-orange: #F59E0B;
+    --error-red: #EF4444;
+    
+    /* Shadows */
+    --shadow-soft: rgba(0, 61, 153, 0.08);
+}
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 16px;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    background-color: var(--neutral-light);
+    color: var(--blue-dark);
+    line-height: 1.6;
+}
+
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+    margin-bottom: 1rem;
+    color: var(--blue-dark);
+}
+
+h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, var(--blue-primary), var(--blue-deep));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+h2 {
+    font-size: 2rem;
+    color: var(--blue-deep);
+}
+
+h3 {
+    font-size: 1.5rem;
+    color: var(--blue-primary);
+}
+
+p {
+    margin-bottom: 1rem;
+    color: var(--neutral-gray);
+}
+
+a {
+    color: var(--blue-primary);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--blue-deep);
+}
+
+/* ============================================
+   BUTTONS
+   ============================================ */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    border: none;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+}
+
+.btn-primary {
+    background-color: var(--blue-primary);
+    color: var(--neutral-white);
+}
+
+.btn-primary:hover {
+    background-color: var(--blue-deep);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.25);
+}
+
+.btn-secondary {
+    background-color: var(--blue-pale);
+    color: var(--blue-primary);
+    border: 2px solid var(--blue-primary);
+}
+
+.btn-secondary:hover {
+    background-color: var(--blue-primary);
+    color: var(--neutral-white);
+}
+
+/* ============================================
+   FORMS
+   ============================================ */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--blue-dark);
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--blue-pale);
+    border-radius: 8px;
+    font-size: 1rem;
+    color: var(--blue-dark);
+    background: var(--neutral-white);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--blue-primary);
+    box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+}
+
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* ============================================
+   CARDS
+   ============================================ */
+.card {
+    background: var(--neutral-white);
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 40px var(--shadow-soft);
+    transition: transform 0.3s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* ============================================
+   TABLES
+   ============================================ */
+.table {
+    width: 100%;
+    background: var(--neutral-white);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 20px var(--shadow-soft);
+    border-collapse: collapse;
+}
+
+.table th {
+    padding: 1rem;
+    background: var(--blue-pale);
+    color: var(--blue-dark);
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 2px solid var(--blue-light);
+}
+
+.table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--blue-pale);
+}
+
+.table tr:last-child td {
+    border-bottom: none;
+}
+
+.table tr:hover {
+    background-color: rgba(0, 102, 255, 0.03);
+}
+
+/* ============================================
+   PROGRESS BARS
+   ============================================ */
+.progress-bar {
+    height: 8px;
+    background: var(--blue-pale);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 1rem 0;
+}
+
+.progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    background: linear-gradient(90deg, var(--blue-primary), var(--blue-light));
+    transition: width 0.6s ease;
+}
+
+/* ============================================
+   BADGES
+   ============================================ */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.badge-primary {
+    background: rgba(0, 102, 255, 0.1);
+    color: var(--blue-primary);
+    border: 1px solid rgba(0, 102, 255, 0.3);
+}
+
+.badge-success {
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--success-green);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+.badge-warning {
+    background: rgba(245, 158, 11, 0.1);
+    color: var(--warning-orange);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.badge-error {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--error-red);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+/* ============================================
+   ALERTS
+   ============================================ */
+.alert {
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background: rgba(16, 185, 129, 0.1);
+    border-color: var(--success-green);
+    color: var(--success-green);
+}
+
+.alert-warning {
+    background: rgba(245, 158, 11, 0.1);
+    border-color: var(--warning-orange);
+    color: var(--warning-orange);
+}
+
+.alert-error {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: var(--error-red);
+    color: var(--error-red);
+}
+
+/* ============================================
+   CHECKBOXES & RADIOS
+   ============================================ */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    cursor: pointer;
+}
+
+.checkbox-input {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--blue-medium);
+    border-radius: 6px;
+    appearance: none;
+    cursor: pointer;
+    position: relative;
+}
+
+.checkbox-input:checked {
+    background-color: var(--blue-primary);
+    border-color: var(--blue-primary);
+}
+
+.checkbox-input:checked::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--neutral-white);
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* ============================================
+   AVATAR
+   ============================================ */
+.avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-primary), var(--blue-deep));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--neutral-white);
+    border: 3px solid var(--neutral-white);
+}
+
+/* ============================================
+   LAYOUT UTILITIES
+   ============================================ */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+.flex {
+    display: flex;
+}
+
+.items-center {
+    align-items: center;
+}
+
+.justify-between {
+    justify-content: space-between;
+}
+
+.gap-1 {
+    gap: 0.5rem;
+}
+
+.gap-2 {
+    gap: 1rem;
+}
+
+.mb-1 {
+    margin-bottom: 0.5rem;
+}
+
+.mb-2 {
+    margin-bottom: 1rem;
+}
+
+.mb-3 {
+    margin-bottom: 1.5rem;
+}
+
+.p-2 {
+    padding: 1rem;
+}
+
+.p-3 {
+    padding: 1.5rem;
+}
+
+.p-4 {
+    padding: 2rem;
+}
+
+.text-center {
+    text-align: center;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+    html {
+        font-size: 14px;
+    }
+    
+    .container {
+        padding: 0 0.75rem;
+    }
+    
+    .table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .card {
+        padding: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--neutral-light);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--blue-medium);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--blue-primary);
+}
+</style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillTrack</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Paste the entire CSS above here */
+    </>
+</head>
+<body>
+    <div class="container p-4">
+        <!-- Header -->
+        <div class="flex items-center justify-between mb-3">
+            <h1>SkillTrack</h1>
+            <div class="flex items-center gap-2">
+                <span class="avatar">JD</span>
+                <span>John Doe</span>
+            </div>
+        </div>
+
+        <!-- Button Example -->
+        <div class="mb-3">
+            <button class="btn btn-primary">Add Skill</button>
+            <button class="btn btn-secondary">View All</button>
+        </div>
+
+        <!-- Card Example -->
+        <div class="card mb-3">
+            <h3>Python Programming</h3>
+            <p>Track your Python learning progress</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 75%"></div>
+            </div>
+            <span class="badge badge-success">Intermediate</span>
+        </div>
+
+        <!-- Form Example -->
+        <div class="card mb-3">
+            <h3>Add Progress</h3>
+            <div class="form-group">
+                <label class="form-label">Skill Name</label>
+                <input type="text" class="form-control" placeholder="Enter skill name">
+            </div>
+            <div class="form-group">
+                <label class="checkbox-group">
+                    <input type="checkbox" class="checkbox-input" checked>
+                    <span>Completed today</span>
+                </label>
+            </div>
+            <button class="btn btn-primary">Save Progress</button>
+        </div>
+
+        <!-- Table Example -->
+        <div class="card">
+            <h3>Recent Activity</h3>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Skill</th>
+                        <th>Progress</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Python</td>
+                        <td>75%</td>
+                        <td><span class="badge badge-success">Active</span></td>
+                    </tr>
+                    <tr>
+                        <td>JavaScript</td>
+                        <td>45%</td>
+                        <td><span class="badge badge-warning">In Progress</span></td>
+                    </tr>
+                    <tr>
+                        <td>React</td>
+                        <td>90%</td>
+                        <td><span class="badge badge-primary">Completed</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

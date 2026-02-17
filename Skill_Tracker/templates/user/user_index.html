@@ -1,0 +1,1167 @@
+{% extends "base2.html" %}
+{% load static %}
+
+{% block extra_css %}
+<!-- Fonts & Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+    /* =====================================================
+       1. THEME VARIABLES & RESET
+    ===================================================== */
+    :root {
+        /* Colors */
+        --primary: #2563eb;
+        --primary-light: #dbeafe;
+        --primary-dark: #1d4ed8;
+        --success: #10b981;
+        --success-light: #d1fae5;
+        --success-dark: #059669;
+        --danger: #ef4444;
+        --warning: #f59e0b;
+        --info: #3b82f6;
+        
+        /* Backgrounds */
+        --bg: #f8fafc;
+        --white: #ffffff;
+        
+        /* Text */
+        --text: #1e293b;
+        --text-light: #64748b;
+        --text-muted: #94a3b8;
+        
+        /* Borders & Shadows */
+        --border: #e2e8f0;
+        --border-light: #f1f5f9;
+        --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+        --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+        --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        
+        /* Border Radius */
+        --radius-sm: 0.375rem;
+        --radius: 0.5rem;
+        --radius-lg: 0.75rem;
+        --radius-xl: 1rem;
+        --radius-2xl: 1.5rem;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+    }
+
+    /* =====================================================
+       2. LAYOUT & CONTAINERS
+    ===================================================== */
+    .container {
+        width: 95%;
+        max-width: 2000px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* Grid Systems */
+    .skills-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 1.5rem;
+        margin: 2rem 0;
+    }
+
+    .library-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+    }
+
+    /* =====================================================
+       3. HEADER & NAVIGATION
+    ===================================================== */
+    .header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 2rem;
+        padding: 0.5rem 0;
+    }
+
+    .logo {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: var(--text);
+        letter-spacing: -0.5px;
+    }
+
+    .logo span {
+        color: var(--primary);
+    }
+
+    .user-header {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+    }
+
+    .greeting h1 {
+        font-size: 1.3rem;
+        font-weight: 600;
+        color: var(--text);
+    }
+
+    .greeting p {
+        font-size: 0.95rem;
+        color: var(--text-light);
+    }
+
+    .avatar {
+        width: 48px;
+        height: 48px;
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 600;
+        font-size: 1.2rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    /* Quick Actions */
+    .quick-actions {
+        display: flex;
+        gap: 1rem;
+        border-radius: 30px;
+        margin-bottom: 2rem;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 0.75rem 1.8rem;
+        border-radius: 40px;
+        text-decoration: none;
+        font-weight: 500;
+        font-size: 0.95rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        transition: all 0.2s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .action-btn-primary {
+        background: var(--primary);
+        color: white;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+    }
+
+    .action-btn-primary:hover {
+        background: var(--primary-dark);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.3);
+    }
+
+    .action-btn-secondary {
+        background: var(--white);
+        color: var(--text);
+        border: 1px solid var(--border);
+    }
+
+    .action-btn-secondary:hover {
+        background: var(--bg);
+        border-color: var(--primary);
+        color: var(--primary);
+        transform: translateY(-2px);
+        box-shadow: var(--shadow);
+    }
+
+    /* =====================================================
+       4. CARDS & SECTIONS
+    ===================================================== */
+    .welcome-card {
+        background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+        border-radius: var(--radius-2xl);
+        padding: 2.5rem;
+        color: white;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .welcome-card h2 {
+        font-size: 2rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.5px;
+    }
+
+    .welcome-card p {
+        font-size: 1rem;
+        opacity: 0.95;
+        margin-bottom: 2rem;
+    }
+
+    .quick-stats {
+        display: flex;
+        gap: 2rem;
+    }
+
+    .stat-pill {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        border-radius: 40px;
+        padding: 0.75rem 2rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .stat-pill span:first-child {
+        font-weight: 700;
+        font-size: 1.5rem;
+    }
+
+    .stat-pill span:last-child {
+        font-size: 0.95rem;
+        opacity: 0.95;
+    }
+
+    /* Section Titles */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        color: var(--text);
+        letter-spacing: -0.3px;
+    }
+
+    .section-title span {
+        font-size: 0.9rem;
+        font-weight: 500;
+        color: var(--text-light);
+        background: var(--white);
+        padding: 0.25rem 1rem;
+        border-radius: 40px;
+        border: 1px solid var(--border);
+    }
+
+    .section-title i {
+        color: var(--primary);
+        font-size: 1.3rem;
+    }
+
+    /* =====================================================
+       5. SKILLS COMPONENTS - STANDARD LOOK
+    ===================================================== */
+    .skill-card {
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        position: relative;
+    }
+
+    .skill-card:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-2px);
+    }
+
+    /* Standard Completed Badge */
+    .completed-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        background: var(--success-light);
+        color: var(--success-dark);
+        font-size: 0.7rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: 30px;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        white-space: nowrap;
+    }
+
+    .completed-badge i {
+        font-size: 0.65rem;
+        color: var(--success);
+    }
+
+    /* Skill Header */
+    .skill-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .skill-title-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex: 1;
+        min-width: 0;
+    }
+
+    .skill-header h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: -0.3px;
+    }
+
+    .skill-level {
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.75rem;
+        border-radius: 30px;
+        background: var(--bg);
+        color: var(--text-light);
+        border: 1px solid var(--border);
+        white-space: nowrap;
+    }
+
+    .skill-level.beginner {
+        background: var(--bg);
+        color: var(--text-light);
+    }
+
+    .skill-level.intermediate {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+        border-color: transparent;
+    }
+
+    .skill-level.advanced {
+        background: var(--primary);
+        color: white;
+        border-color: transparent;
+    }
+
+    .skill-level.completed {
+        background: var(--success-light);
+        color: var(--success-dark);
+        border-color: transparent;
+    }
+
+    /* Skill Meta */
+    .skill-meta {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+        font-size: 0.85rem;
+        color: var(--text-light);
+    }
+
+    .status-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .status-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .status-dot.active {
+        background: var(--success);
+        box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .status-dot.inactive {
+        background: var(--text-muted);
+    }
+
+    .status-dot.completed {
+        background: var(--success);
+        position: relative;
+    }
+
+    .status-text {
+        font-size: 0.85rem;
+    }
+
+    .status-text.completed {
+        color: var(--success-dark);
+        font-weight: 500;
+    }
+
+    /* Progress Bar */
+    .skill-progress {
+        margin: 1rem 0;
+    }
+
+    .progress-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .progress-label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: var(--text-light);
+    }
+
+    .progress-value {
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--primary);
+    }
+
+    .progress-value.completed {
+        color: var(--success-dark);
+    }
+
+    .progress-bar-bg {
+        height: 6px;
+        background: var(--border-light);
+        border-radius: 3px;
+        overflow: hidden;
+    }
+
+    .progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        border-radius: 3px;
+        transition: width 0.3s ease;
+    }
+
+    .progress-bar-fill.completed {
+        background: linear-gradient(90deg, var(--success), var(--success-light));
+    }
+
+    /* Skill Footer - Fixed with proper goal links */
+    .skill-footer {
+        display: flex;
+        gap: 0.5rem;
+        margin-top: auto;
+        padding-top: 1rem;
+        border-top: 1px solid var(--border-light);
+        flex-wrap: wrap;
+    }
+
+    .skill-link {
+        padding: 0.4rem 0;
+        border-radius: var(--radius);
+        font-size: 0.75rem;
+        font-weight: 500;
+        text-decoration: none;
+        color: var(--text-light);
+        background: var(--bg);
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+        flex: 1 0 auto;
+        text-align: center;
+        min-width: 45px;
+    }
+
+    .skill-link:hover {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+        transform: translateY(-2px);
+    }
+
+    .skill-link.delete:hover {
+        background: var(--danger);
+        border-color: var(--danger);
+    }
+
+    /* Goal link specific styling */
+    .skill-link.goal {
+        background: var(--primary-light);
+        color: var(--primary-dark);
+        border-color: transparent;
+    }
+
+    .skill-link.goal:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    /* Completed skill card styling */
+    .skill-card.completed {
+        background: linear-gradient(to bottom, var(--white), #f0fdf4);
+        border-color: var(--success-light);
+    }
+
+    .skill-card.completed .skill-header h3 {
+        color: var(--success-dark);
+    }
+
+    /* =====================================================
+       6. LIBRARY COMPONENTS
+    ===================================================== */
+    .library-module {
+        margin: 0.5rem 0;
+        background: var(--white);
+        border-radius: var(--radius-xl);
+        padding: 1.25rem;
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .library-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+
+    .library-header h3 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--text);
+    }
+
+    .library-header h3 i {
+        color: var(--primary);
+    }
+
+    .library-header .view-all {
+        color: var(--primary);
+        text-decoration: none;
+        font-size: 0.85rem;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+        padding: 0.35rem 1rem;
+        background: var(--primary-light);
+        border-radius: 30px;
+        transition: all 0.2s ease;
+        font-weight: 500;
+    }
+
+    .library-header .view-all:hover {
+        background: var(--primary);
+        color: white;
+    }
+
+    .library-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        gap: 1rem;
+    }
+
+    .library-item {
+        background: var(--bg);
+        border-radius: var(--radius-lg);
+        padding: 1rem;
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .library-item:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+    }
+
+    .library-item-type {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: var(--primary);
+        background: var(--primary-light);
+        display: inline-block;
+        padding: 0.2rem 0.75rem;
+        border-radius: 30px;
+        margin-bottom: 0.5rem;
+        width: fit-content;
+    }
+
+    .library-item-title {
+        font-size: 1rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: var(--text);
+    }
+
+    .library-item-skill {
+        font-size: 0.8rem;
+        color: var(--text-light);
+        margin-bottom: 0.75rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .library-item-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-top: 0.75rem;
+        border-top: 1px solid var(--border-light);
+        margin-top: auto;
+    }
+
+    .library-item-date {
+        font-size: 0.7rem;
+        color: var(--text-light);
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .library-item-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .library-action {
+        color: var(--text-light);
+        text-decoration: none;
+        font-size: 0.8rem;
+        transition: all 0.2s ease;
+        padding: 0.25rem;
+        border-radius: var(--radius-sm);
+    }
+
+    .library-action:hover {
+        color: var(--primary);
+        background: var(--primary-light);
+    }
+
+    .library-browse-card {
+        background: var(--bg);
+        border: 2px dashed var(--border);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        min-height: 160px;
+        text-decoration: none;
+        transition: all 0.2s ease;
+    }
+
+    .library-browse-card:hover {
+        border-color: var(--primary);
+        background: var(--primary-light);
+    }
+
+    .library-browse-card i {
+        font-size: 2rem;
+        color: var(--primary);
+        margin-bottom: 0.75rem;
+    }
+
+    .library-browse-card span {
+        font-size: 0.95rem;
+        font-weight: 500;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+    }
+
+    .library-browse-card small {
+        font-size: 0.75rem;
+        color: var(--text-light);
+    }
+
+    /* =====================================================
+       7. STATISTICS COMPONENTS
+    ===================================================== */
+    .stat-card {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        padding: 1.5rem;
+        border: 1px solid var(--border);
+        transition: all 0.2s ease;
+    }
+
+    .stat-card:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow);
+        transform: translateY(-2px);
+    }
+
+    .stat-number {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--text);
+        margin-bottom: 0.25rem;
+        letter-spacing: -0.5px;
+    }
+
+    .stat-label {
+        font-size: 0.85rem;
+        color: var(--text-light);
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .stat-label i {
+        color: var(--success);
+    }
+
+    /* =====================================================
+       8. ACTIVITY COMPONENTS
+    ===================================================== */
+    .activity-list {
+        background: var(--white);
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--border);
+        overflow: hidden;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid var(--border-light);
+        transition: background 0.2s ease;
+    }
+
+    .activity-item:last-child {
+        border-bottom: none;
+    }
+
+    .activity-item:hover {
+        background: var(--bg);
+    }
+
+    .activity-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        margin-right: 1rem;
+        background: var(--primary);
+    }
+
+    .activity-dot.completed {
+        background: var(--success);
+    }
+
+    .activity-name {
+        font-size: 0.95rem;
+        font-weight: 500;
+        flex: 1;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .activity-date {
+        font-size: 0.8rem;
+        color: var(--text-light);
+    }
+
+    /* =====================================================
+       9. EMPTY STATES
+    ===================================================== */
+    .empty-state {
+        background: var(--white);
+        border: 2px dashed var(--border);
+        border-radius: var(--radius-xl);
+        padding: 4rem 2rem;
+        text-align: center;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        color: var(--text-muted);
+        margin-bottom: 1rem;
+    }
+
+    .empty-state p {
+        color: var(--text-light);
+        margin-bottom: 1.5rem;
+    }
+
+    /* =====================================================
+       10. RESPONSIVE DESIGN
+    ===================================================== */
+    @media (max-width: 1400px) {
+        .skills-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.25rem;
+        }
+    }
+
+    @media (max-width: 1200px) {
+        .skills-grid {
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+        
+        .skill-link {
+            font-size: 0.7rem;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .skills-grid {
+            grid-template-columns: repeat(3, 1fr);
+        }
+        
+        .container {
+            width: 95%;
+            padding: 1.5rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .container {
+            width: 100%;
+            padding: 1rem;
+        }
+
+        .header {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 1rem;
+        }
+
+        .quick-stats {
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .stats-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .skills-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .welcome-card {
+            padding: 1.5rem;
+        }
+        
+        .welcome-card h2 {
+            font-size: 1.5rem;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .skills-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .quick-actions {
+            flex-direction: column;
+        }
+        
+        .action-btn {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    
+    <section class="welcome-card">
+        <h2>{{ user.username }}, ready to learn?</h2>
+        <p>Track your skills and progress</p>
+        
+        <div class="quick-stats">
+            <div class="stat-pill">
+                <span>{{ skills.count|default:"0" }}</span>
+                <span>skills</span>
+            </div>
+            <div class="stat-pill">
+                <span>{{ streak|default:"0" }}</span>
+                <span>streak</span>
+            </div>
+            <div class="stat-pill">
+                <span>{{ total_hours|default:"0" }}h</span>
+                <span>learned</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- QUICK ACTIONS -->
+    <nav class="quick-actions">
+        <a href="{% url 'add_skill' %}" class="action-btn action-btn-primary">
+            <i class="fas fa-plus"></i> New Skill
+        </a>
+        <a href="{% url 'skill_list' %}" class="action-btn action-btn-secondary">
+            <i class="fas fa-list"></i> All Skills
+        </a>
+        <a href="{% url 'note_library' %}" class="action-btn action-btn-secondary">
+            <i class="fas fa-book"></i> Library
+        </a>
+        <a href="{% url 'view_goals' %}" class="action-btn action-btn-secondary">
+            <i class="fas fa-bullseye"></i> All Goals
+        </a>
+        <a href="{% url 'dashboard' %}" class="action-btn action-btn-secondary">
+            <i class="fas fa-chart-line"></i> Analytics
+        </a>
+    </nav>
+
+    <!-- MY SKILLS SECTION -->
+    <section>
+        <div class="section-title">
+            <i class="fas fa-code"></i> My Skills
+            <span>{{ skills.count }}</span>
+        </div>
+
+        {% if skills %}
+        <div class="skills-grid">
+            {% for skill in skills %}
+            {% with is_completed=skill.is_completed|default:False %}
+            <article class="skill-card {% if is_completed %}completed{% endif %}">
+                <div class="skill-header">
+                    <div class="skill-title-wrapper">
+                        <h3>{{ skill.title }}</h3>
+                        {% if is_completed %}
+                        <span class="completed-badge">
+                            <i class="fas fa-check-circle"></i> Completed
+                        </span>
+                        {% endif %}
+                    </div>
+                    <span class="skill-level 
+                        {% if is_completed %}completed
+                        {% elif skill.proficiency_level == 'beginner' %}beginner
+                        {% elif skill.proficiency_level == 'intermediate' %}intermediate
+                        {% elif skill.proficiency_level == 'advanced' %}advanced
+                        {% endif %}">
+                        {{ skill.proficiency_level }}
+                    </span>
+                </div>
+                
+                <div class="skill-meta">
+                    <div class="status-indicator">
+                        <span class="status-dot 
+                            {% if is_completed %}completed
+                            {% elif skill.is_active %}active
+                            {% else %}inactive{% endif %}">
+                        </span>
+                        <span class="status-text {% if is_completed %}completed{% endif %}">
+                            {% if is_completed %}
+                            <i class="fas fa-trophy" style="font-size: 0.7rem; margin-right: 0.25rem;"></i>
+                            Mastered
+                            {% elif skill.is_active %}
+                            Active
+                            {% else %}
+                            Inactive
+                            {% endif %}
+                        </span>
+                    </div>
+                    <span>
+                        <i class="far fa-calendar-alt" style="margin-right: 0.25rem;"></i>
+                        {{ skill.last_practiced|date:"M d, Y"|default:"Not started" }}
+                    </span>
+                </div>
+
+                <div class="skill-progress">
+                    <div class="progress-header">
+                        <span class="progress-label">Progress</span>
+                        <span class="progress-value {% if is_completed %}completed{% endif %}">
+                            {% if is_completed %}100%{% else %}{{ skill.progress|default:"0" }}%{% endif %}
+                        </span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill {% if is_completed %}completed{% endif %}" 
+                             style="width: {% if is_completed %}100{% else %}{{ skill.progress|default:"0" }}{% endif %}%;">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="skill-footer">
+                    <a href="{% url 'view_skill' skill.id %}" class="skill-link">View</a>
+                    
+                    <!-- Option 1: Link to goals list filtered by this skill -->
+                    <a href="{% url 'view_goals' %}?skill_id={{ skill.id }}" class="skill-link">
+                    Goals
+                    </a>
+    
+                    
+                    <a href="{% url 'add_skill_progress' skill.id %}" class="skill-link">Progress</a>
+                    <a href="{% url 'note_library' %}?skill={{ skill.id }}" class="skill-link">Notes</a>
+                    <a href="{% url 'edit_skill' skill.id %}" class="skill-link">Edit</a>
+                    <a href="{% url 'delete_skill' skill.id %}" class="skill-link delete">Delete</a>
+                </div>
+            </article>
+            {% endwith %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <i class="fas fa-rocket"></i>
+            <p>No skills yet. Start your journey!</p>
+            <a href="{% url 'add_skill' %}" class="action-btn action-btn-primary">
+                Add First Skill
+            </a>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- LIBRARY SECTION -->
+    <section class="library-module">
+        <div class="library-header">
+            <h3><i class="fas fa-book-open"></i> Resource Library</h3>
+            <a href="{% url 'note_library' %}" class="view-all">
+                Browse All <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        {% if notes %}
+        <div class="library-grid">
+            {% for note in notes|slice:":4" %}
+            <article class="library-item">
+                <span class="library-item-type">{{ note.note_type|title }}</span>
+                <h4 class="library-item-title">{{ note.title|truncatechars:30 }}</h4>
+                <div class="library-item-skill">
+                    <i class="fas fa-tag"></i> {{ note.skill.title }}
+                    {% if note.skill.is_completed %}
+                    <span class="completed-badge" style="font-size: 0.65rem;">
+                        <i class="fas fa-check-circle"></i> Completed
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="library-item-footer">
+                    <span class="library-item-date">
+                        <i class="far fa-clock"></i> {{ note.uploaded_at|date:"M d" }}
+                    </span>
+                    <div class="library-item-actions">
+                        <a href="{{ note.file.url }}" download class="library-action" title="Download">
+                            <i class="fas fa-download"></i>
+                        </a>
+                        <a href="{% url 'delete_note' note.id %}" class="library-action" title="Delete">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+
+            <a href="{% url 'note_library' %}" class="library-browse-card">
+                <i class="fas fa-arrow-right"></i>
+                <span>Browse Library</span>
+                <small>{{ notes.count }} total items</small>
+            </a>
+        </div>
+        {% else %}
+        <div class="text-center" style="padding: 2rem;">
+            <i class="fas fa-book-open" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+            <p style="color: var(--text-light); margin-bottom: 1.5rem;">Your library is empty</p>
+            <a href="{% url 'note_library' %}" class="action-btn action-btn-primary" style="padding: 0.5rem 1.5rem; font-size: 0.9rem;">
+                Go to Library
+            </a>
+        </div>
+        {% endif %}
+    </section>
+
+    <!-- STATISTICS GRID -->
+    <section class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">{{ skills.count|default:"0" }}</div>
+            <div class="stat-label">Total Skills</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ active_skills|default:"0" }}</div>
+            <div class="stat-label">Active Skills</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ completed_skills|default:"0" }}</div>
+            <div class="stat-label">
+                <i class="fas fa-check-circle" style="color: var(--success);"></i>
+                Completed
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">{{ notes.count|default:"0" }}</div>
+            <div class="stat-label">Library Items</div>
+        </div>
+    </section>
+
+    <!-- RECENT ACTIVITY -->
+    <section>
+        <div class="section-title">
+            <i class="fas fa-history"></i> Recent Activity
+        </div>
+        
+        <div class="activity-list">
+            {% if skills %}
+                {% for skill in skills|slice:":5" %}
+                <div class="activity-item">
+                    <div class="activity-dot {% if skill.is_completed %}completed{% endif %}"></div>
+                    <span class="activity-name">
+                        {{ skill.title }}
+                        {% if skill.is_completed %}
+                        <span class="completed-badge" style="font-size: 0.65rem;">
+                            <i class="fas fa-check-circle"></i> Completed
+                        </span>
+                        {% endif %}
+                    </span>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="activity-item">
+                    <span class="activity-name">No recent activity</span>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+</div>
+
+<script>
+    // Delete confirmation
+    document.querySelectorAll('.skill-link.delete').forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (!confirm('Are you sure you want to delete this skill?')) {
+                e.preventDefault();
+            }
+        });
+    });
+
+    // Logout confirmation
+    document.querySelectorAll('a[href*="logout"]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            if (!confirm('Log out?')) e.preventDefault();
+        });
+    });
+</script>
+{% endblock %}
